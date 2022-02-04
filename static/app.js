@@ -1,7 +1,4 @@
-
-
-//TODO element still returns after fade javascrip > div.container > div.alert.alert-success
-
-
-
-//TODO add an auto refresh to the page?
+/**Fades out the alert messages */
+$(function() {
+    $("#alertObject").fadeOut(2500);
+});

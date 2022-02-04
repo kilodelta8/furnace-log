@@ -2,7 +2,12 @@
 
 {% block body %}
 <div class="jumbotron text-center">
-    <h2>Furnace {{session.username}} Log</h2>
+    <!--TODO if statement not working-->
+    {% if session.loadingSide == true %}
+        <h2>Furnace {{session.username}} Loading Log</h2>
+    {% else %}
+        <h2>Furnace {{session.username}} Unload Log</h2>
+    {% endif %}
 </div>
 <hr />
 <!--Navigation bar-->

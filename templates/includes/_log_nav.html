@@ -1,17 +1,28 @@
 <div class="container">
   <div class="d-flex justify-content-center">
-    <nav class="my-2 my-md-0 mr-md-3">
+    <nav class="my
+    <hr />-2 my-md-0 mr-md-3">
       <!--TODO rewrite for log screen controls-->
       {% if session.logged_in == True %}
       <span class="center">
         <!--TODO set buttons to center-->
         <!--TODO move _nav buttons here, maybe in a dropdown menu-->
-        <a class="btn btn-primary" href="#">Change</a>
-        <a class="btn btn-primary" href="#">Add</a>
-        <a class="btn btn-primary" href="#">Remove</a>
-        <a class="btn btn-primary" href="#">Other</a>
-        <a class="btn btn-primary" href="#">Print</a>
-        <a class="btn btn-danger" href="#">RESET</a>
+        <a class="btn btn-success" href="#">Start</a>
+        <a class="btn btn-warning" href="#">Down</a>
+        <a class="btn btn-danger" href="#">Stop</a>
+
+        <div class="dropdown">
+          <a class="btn btn-primary" href="#">Log Settings</a>
+          <div class="dropdown-content">
+            <a id="dropdown-btn" class="btn btn-primary" href="#">Change</a>
+            <a id="dropdown-btn" class="btn btn-primary" href="#">Add</a>
+            <a id="dropdown-btn" class="btn btn-primary" href="#">Remove</a>
+            <a id="dropdown-btn" class="btn btn-primary" href="#">Other</a>
+            <a id="dropdown-btn" class="btn btn-primary" href="#">Print</a>
+            <a id="dropdown-btn" class="btn btn-danger" href="#">RESET</a>
+          </div>
+        </div>
+        
       </span>
       {% endif %}
     </nav>

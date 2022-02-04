@@ -1,13 +1,10 @@
-<div class="d-flex justify-content-between">
+<div id="top-menu" class="d-flex justify-content-between">
   <div class="d-flex justify-content-start align-items-start">
     <!--TODO -->
     <nav class="my-2 my-md-0 mr-md-3">
         <!--FIXME logged_in nav not showing only else nav-->
         {% if session.logged_in == True %}
         <span class="center">
-          <a class="btn btn-success" href="#">Start</a>
-          <a class="btn btn-warning" href="#">Down</a>
-          <a class="btn btn-danger" href="#">Stop</a>
           <a class="btn btn-primary" href="/logout">Logout</a>
           <a class="btn btn-primary" href="/setup">Admin</a>
           {% else %}
