@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+    <h1>Setup User</h1>
+</div>
+<hr />
+<div class="container">
+    {% from 'includes/_formutility.html' import render_field %}
+    <form action="" method="POST"><!--(action NOT NEEDED PER FORM HELPER)-->
+        <div class="mx-auto">
+            {{render_field(form.username, class_="form-control")}}
+        </div>
+        <div class="mx-auto" aria-describedby="passwordHelpBlock">
+            {{render_field(form.password, class_="form-control")}}
+        </div>
+        <div id="passwordHelpBlock" class="form-text">
+            Your password must be 7 characters minimum
+          </div>
+        <div class="mx-auto">
+            {{render_field(form.verify, class_="form-control")}}
+        </div>
+        <input type="submit" class="btn btn-primary" value="Add User" />
+    </form>
+</div>
+{% endblock %}

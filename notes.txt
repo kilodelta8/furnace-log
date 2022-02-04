@@ -1,0 +1,37 @@
+#Virtual Environment (WIN)
+    virtualenv env
+    \path\to\env\Scripts\activate
+    deactivate
+
+#Virtual Environment (LIN)
+NEW:
+    python3 -m venv env
+OLD:
+    virtualenv env
+    source env/bin/activate
+    deactivate
+
+#Dependencies
+    pip freeze > requirements.txt
+    (<env_name>)$ pip install -r path/to/requirements.txt
+
+#MAMP Setup
+    click user accounts
+    set name as project name
+    set password
+    tick "create database with same name and grant all privileges"
+    click "go"
+
+#DB Setup
+    start a python shell
+    >>>from __init__ import db, User
+    >>>db.create_all()
+
+    #add objects
+        >>>db.session.add(User('username'))
+
+    >>>db.session.commit()
+
+
+
+    

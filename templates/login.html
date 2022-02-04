@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+    <h1>Login</h1>
+</div>
+<hr />
+<div class="container">
+    {% from 'includes/_formutility.html' import render_field %}
+    <form action="" method="POST"> <!--(action NOT NEEDED PER FORM HELPER)-->
+        <div class="mb-3">
+            {{render_field(form.username, class_="form-control")}}
+        </div>
+        <div class="mb-3">
+            {{render_field(form.password, class_="form-control")}}
+        </div>
+        <input type="submit" class="btn btn-primary" value="Login" />
+    </form>
+</div>
+{% endblock %}
