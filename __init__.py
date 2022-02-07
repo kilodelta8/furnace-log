@@ -23,7 +23,7 @@ app.config['SQLALCHEMY_ECHO'] = True
 # initialize instance of db
 db = SQLAlchemy(app)
 
-# $pbkdf2-sha256$29000$LIWw9h6jNMbYO.ccoxRCiA$li0Ea5Y.wIZspFzwOeHr5BEGqW2MZ3.DzAE1qL2j.uY
+
 # ---------------MODELS--------------------
 # TODO finish model befores instantiation
 # user model
@@ -31,6 +31,7 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    #furnaceNum = db.Column(db.Integer)
     #logId = db.Column(db.Integer, db.ForeignKey('log.id'), nullable=False)
     username = db.Column(db.String(30))
     password = db.Column(db.String(250))
@@ -48,13 +49,15 @@ class User(db.Model):
 '''
 class Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime, nullable=False,
+        default=datetime.utcnow)
     furnaceNum = db.Column(db.Integer)
-    modelNum = db.Column(db.Integer)
-    jobNum = db.Column(db.Integer)
-    numOfWagon = db.Column(db.Integer)
-    user = db.relationship('User', backref='log', lazy=True)
+    shift = db.Column(db.Integer)
+    glasses = db.Column(db.PickleType, nullable=False)
+    jobNum = db.Column(db.PickleType, nullable=False)
+    user_name = db.Column(db.String(30))
 
-    def __init__(self, furnaceNum, modelNum, jobNum, numOfWagon):
+    def __init__(self, furnaceNum, modelNum, jobNum):
         self.furnaceNum = furnaceNum
         self.modelNum = modelNum
         self.jobNum = jobNum
