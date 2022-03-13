@@ -2,8 +2,7 @@
 
 {% block body %}
 <div class="jumbotron text-center">
-    <!--TODO if statement not working-->
-    {% if session.loadingSide == true %}
+    {% if session.frontOrBack == true %}
         <h2>Furnace {{session.username}} Loading Log</h2>
     {% else %}
         <h2>Furnace {{session.username}} Unload Log</h2>
@@ -60,7 +59,7 @@
         <tr><td>27</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td>28</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td>29</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-        </table>
+    </table>
         
         
 </div>

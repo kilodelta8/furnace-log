@@ -1,13 +1,13 @@
-from xmlrpc.client import Boolean
 from flask import Flask, render_template, url_for, flash, session, request, redirect
 from flask import Flask, render_template
+from flask_wtf import FlaskForm
+from sqlalchemy import false, true
 from wtforms import Form, StringField, PasswordField, TextAreaField, SubmitField, validators, BooleanField
+from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import pbkdf2_sha256
-#from datetime import datetime
-import json
-import urllib3
-
+import datetime
+import time
 
 # application init and configurations
 app = Flask(__name__)
@@ -31,8 +31,8 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    #furnaceNum = db.Column(db.Integer)
-    #logId = db.Column(db.Integer, db.ForeignKey('log.id'), nullable=False)
+    # furnaceNum = db.Column(db.Integer)
+    # logId = db.Column(db.Integer, db.ForeignKey('log.id'), nullable=False)
     username = db.Column(db.String(30))
     password = db.Column(db.String(250))
     loadingSide = db.Column(db.Boolean(), nullable=False)
@@ -90,21 +90,58 @@ class RegistrationForm(Form):
         'Loading Side', false_values=(False, 0))
     submit = SubmitField('Submit')
 
+# _______________NOT A FORM per say_______________
+
+
+class LogNavButtons(FlaskForm):
+    startTime = SubmitField('Start')
+    endTime = SubmitField('Stop')
+    pauseTime = SubmitField('Pause')
+
 
 # ___________________ROUTES_____________________
 
 
 # home - landing page route
-@app.route('/home')
+
+
+@app.route('/home', methods=['GET', 'POST'])
 def home():
-    #blog = Blog.query.order_by(Blog.pub_date.desc()).all()
-    return render_template('home.html', title='Furnace Log')
+    # blog = Blog.query.order_by(Blog.pub_date.desc()).all()
+
+    form = LogNavButtons()
+    if form.validate_on_submit():
+        # check if any bool is true or false
+        if form.startTime.data:
+            tm = time.time()
+            flash('Now logging time and labels...', 'success')
+            print(tm)
+            return redirect(url_for('home'))
+        elif form.pauseTime.data:
+            tm = time.time()
+            flash('Logging has been Paused!', 'warning')
+            print(tm)
+            return redirect(url_for('home'))
+        elif form.endTime.data:
+            tm = time.time()
+            flash('All logging and counts have stopped...', 'danger')
+            print(tm)
+            return redirect(url_for('home'))
+    else:
+        return render_template('home.html', title='Furnace Log', form=form)
+
+
+@app.route('/')
+def index():
+    return redirect(url_for('login'))
+
 
 # login to account
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    '''
+    redirect/render_template <- login(none):
+    '''
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
         username = request.form['username']
@@ -115,6 +152,7 @@ def login():
         if pbkdf2_sha256.verify(password, hashed):
             session['username'] = existing_user.username
             session['logged_in'] = True
+            session['frontOrBack'] = existing_user.loadingSide
             # TODO - write js to fade out alert
             flash('You are now logged in!', 'success')
             return redirect(url_for('home'))
@@ -132,7 +170,7 @@ def login():
 @app.route('/setup', methods=['GET', 'POST'])
 def setup():
     '''
-    setup: A route that displays the setup page to add new users.
+    redirect/render_template <- setup(none): A route that displays the setup page to add new users.
     A new user is either load (check box yes), indicating the user will be at the front
     of the furnace or unload (check box unchecked) for the rear unload area of the furnace.
     The position of the user (load/unload) will dictate controls available on the 
@@ -172,6 +210,7 @@ def setup():
 def logout():
     session.pop('username', None)
     session['logged_in'] = False
+    session['frontOrBack'] = None
     flash('You have been logged out!', 'success')
     return redirect(url_for('login'))
 
@@ -180,7 +219,7 @@ def logout():
 def require_login():
     allowed_routes = ['login', 'setup']
     if request.endpoint not in allowed_routes and 'username' not in session:
-        return redirect('/setup')
+        return redirect('/login')
 
 
 # <<<-------------------------------------------------------->>>
