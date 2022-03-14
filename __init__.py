@@ -97,6 +97,12 @@ class LogNavButtons(FlaskForm):
     startTime = SubmitField('Start')
     endTime = SubmitField('Stop')
     pauseTime = SubmitField('Pause')
+    change = SubmitField("Change")
+    add = SubmitField("add")
+    remove = SubmitField("Remove")
+    other = SubmitField("Other")
+    print = SubmitField("print")
+    startBtnClicked = None
 
 
 # ___________________ROUTES_____________________
@@ -110,25 +116,43 @@ def home():
     # blog = Blog.query.order_by(Blog.pub_date.desc()).all()
 
     form = LogNavButtons()
-    if form.validate_on_submit():
-        # check if any bool is true or false
-        if form.startTime.data:
+    # if request.method == 'POST' and:
+    # check if any bool is true or false
+    if request.method == 'POST':
+        if request.form.get('startTime', '') == 'Start':
             tm = time.time()
             flash('Now logging time and labels...', 'success')
             print(tm)
+            LogNavButtons.startBtnClicked = 1
             return redirect(url_for('home'))
-        elif form.pauseTime.data:
+        elif request.form.get('pauseTime', '') == 'Pause':
             tm = time.time()
             flash('Logging has been Paused!', 'warning')
             print(tm)
             return redirect(url_for('home'))
-        elif form.endTime.data:
+        elif request.form.get('endTime', '') == 'Stop':
             tm = time.time()
             flash('All logging and counts have stopped...', 'danger')
             print(tm)
             return redirect(url_for('home'))
-    else:
-        return render_template('home.html', title='Furnace Log', form=form)
+        elif request.form.get('change', '') == 'Change':
+            tm = time.time()
+            flash('Change is working...', 'success')
+            print(tm)
+            return redirect(url_for('home'))
+        elif request.form.get('add', '') == 'Add':
+            flash('Add button is working', 'success')
+            return redirect(url_for('home'))
+        elif request.form.get('remove', '') == 'Remove':
+            flash('Remove button is working', 'success')
+            return redirect(url_for('home'))
+        elif request.form.get('other', '') == 'Other':
+            flash('Other button is working', 'success')
+            return redirect(url_for('home'))
+        elif request.form.get('print', '') == 'Print':
+            flash('Print button is working', 'success')
+            return redirect(url_for('home'))
+    return render_template('home.html', title='Furnace Log', form=form)
 
 
 @app.route('/')

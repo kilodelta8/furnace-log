@@ -5,44 +5,29 @@
       <!--TODO rewrite for log screen controls-->
       {% if session.logged_in == True %}
       <span class="center">
+        <form method="post">
         <!--TODO set buttons to center-->
         <!--TODO move _nav buttons here, maybe in a dropdown menu-->
-        <form method="post">
-          {% macro render_field(field) %}
-            {{ form.hidden_tag() }}
-            {{ form.startTime }}
-            {{ form.pauseTime }}
-            {{ form.endTime }}
-          {% endmacro %}
-        </form>
-      </span>
-
-<!--
           {% if startBtnClicked == 1 %}
-            <input class="btn btn-success" href="{{url_for('home')}}" type="submit" name="startTime" value="Start" disabled>
+            <input class="btn btn-success" type="submit" name="startTime" value="Start" disabled>
           {% else %}
-            <input class="btn btn-success" href="{{url_for('home')}}" type="submit" name="startTime" value="Start">
+            <input class="btn btn-success" type="submit" name="startTime" value="Start">
           {% endif %}
-        
-
-          <input class="btn btn-warning" href="{{url_for('home')}}" type="submit" name="pauseTime" value="Pause">
-        
-          <input class="btn btn-danger" href="{{url_for('home')}}" type="submit" name="stopTime" value="Stop">
-        
+          <input class="btn btn-warning" type="submit" name="pauseTime" value="Pause">
+          <input class="btn btn-danger" type="submit" name="endTime" value="Stop">
           <div class="dropdown">
             <a class="btn btn-primary" href="#">Log Settings</a>
             <div class="dropdown-content">
-              <a id="dropdown-btn" class="btn btn-primary" href="#">Change</a>
-              <a id="dropdown-btn" class="btn btn-primary" href="#">Add</a>
-              <a id="dropdown-btn" class="btn btn-primary" href="#">Remove</a>
-              <a id="dropdown-btn" class="btn btn-primary" href="#">Other</a>
-              <a id="dropdown-btn" class="btn btn-primary" href="#">Print</a>
-              <a id="dropdown-btn" class="btn btn-danger" href="#">RESET</a>
+              <input id="dropdown-btn" class="btn btn-primary" type="submit" name="change" value="Change">
+              <input id="dropdown-btn" class="btn btn-primary" type="submit" name="add" value="Add">
+              <input id="dropdown-btn" class="btn btn-primary" type="submit" name="remove" value="Remove">
+              <input id="dropdown-btn" class="btn btn-primary" type="submit" name="other" value="Other">
+              <input id="dropdown-btn" class="btn btn-primary" type="submit" name="print" value="Print">
+              <input id="dropdown-btn" class="btn btn-danger" type="submit" name="x" value="x">
             </div>
           </div>
         </form>
       </span>
-      -->
       {% endif %}
     </nav>
   </div>
