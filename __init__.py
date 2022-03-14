@@ -113,48 +113,72 @@ class LogNavButtons(FlaskForm):
 
 @app.route('/home', methods=['GET', 'POST'])
 def home():
-    # blog = Blog.query.order_by(Blog.pub_date.desc()).all()
+    '''
+    home(None) route.
+    '''
+    # blog = Blog.query.order_by(Blog.pub_date.desc()).all() <-left for DB query reference
 
+    # instantiate an instance of the LogNavButtons class
     form = LogNavButtons()
-    # if request.method == 'POST' and:
-    # check if any bool is true or false
+
+    # check for post request, if so: Which button posted the request?
     if request.method == 'POST':
+
+        # TODO - startTime grabs an instance of time as a starting point for logging of label counts
         if request.form.get('startTime', '') == 'Start':
             tm = time.time()
-            flash('Now logging time and labels...', 'success')
-            print(tm)
+            flash('Now logging time and labels... ' +
+                  str(((tm / 1000) / 60) / 60), 'success')
             LogNavButtons.startBtnClicked = 1
             return redirect(url_for('home'))
+
+        # TODO - pauseTime grabs two instances of time (at a time), disabling all else until the second click, subtracting
+        # the two and storing the total time for later subtraction from the total logging time.
         elif request.form.get('pauseTime', '') == 'Pause':
             tm = time.time()
-            flash('Logging has been Paused!', 'warning')
-            print(tm)
+            flash('Logging has been Paused!' +
+                  str(((tm / 1000) / 60) / 60), 'warning')
             return redirect(url_for('home'))
+
+        # TODO - endTime grabs the last timestamp in the equation to decide total time for the calculation of total labels
         elif request.form.get('endTime', '') == 'Stop':
             tm = time.time()
-            flash('All logging and counts have stopped...', 'danger')
-            print(tm)
+            flash('All logging and counts have stopped...' +
+                  str(((tm / 1000) / 60) / 60), 'danger')
             return redirect(url_for('home'))
+
+        # TODO - change presents a popup menu to enter the information for a new model for a mold change or print change
+        # then updates the DB and present the last label count for the prior model
         elif request.form.get('change', '') == 'Change':
             tm = time.time()
             flash('Change is working...', 'success')
-            print(tm)
             return redirect(url_for('home'))
+
+        # TODO - add presents a pop up menu to add glass (should be in A setup menu)
         elif request.form.get('add', '') == 'Add':
             flash('Add button is working', 'success')
             return redirect(url_for('home'))
+
+        # TODO - remove may be redundant and not necassary (if so, should be in A setup menu)
         elif request.form.get('remove', '') == 'Remove':
             flash('Remove button is working', 'success')
             return redirect(url_for('home'))
+
+        # TODO - other.....for what????
         elif request.form.get('other', '') == 'Other':
             flash('Other button is working', 'success')
             return redirect(url_for('home'))
+
+        # TODO - should this be here??  Pretty sure this is a whole 'nother world
         elif request.form.get('print', '') == 'Print':
             flash('Print button is working', 'success')
             return redirect(url_for('home'))
+
+    # If not post then get
     return render_template('home.html', title='Furnace Log', form=form)
 
 
+# TODO - can this route be placed underneath the /login route???
 @app.route('/')
 def index():
     return redirect(url_for('login'))
@@ -164,7 +188,7 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     '''
-    redirect/render_template <- login(none):
+    login(None) route.  This method allows a user to login to the system.
     '''
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():

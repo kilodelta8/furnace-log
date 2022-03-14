@@ -8,6 +8,9 @@
 }
 
 
+
+/*========Drop Down Menu=========*/
+/* TODO - Buttons in the dropdown current are aligned left instead of the same width and centered */
 #dropdown-btn {
     margin: 0.3em;
 }
@@ -16,9 +19,6 @@
 #top-menu {
     padding: 0.7em;
 }
-
-
-
 
 /* Dropdown Button */
 .dropbtn {
