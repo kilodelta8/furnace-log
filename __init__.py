@@ -46,27 +46,37 @@ class User(db.Model):
         return self.username
 
 
-'''
+# TODO - develop a model for a log sheet, suitable for a DB
 class Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, nullable=False,
-        default=datetime.utcnow)
+                     default=datetime.utcnow)
     furnaceNum = db.Column(db.Integer)
     shift = db.Column(db.Integer)
-    glasses = db.Column(db.PickleType, nullable=False)
-    jobNum = db.Column(db.PickleType, nullable=False)
-    user_name = db.Column(db.String(30))
+    glasses = db.Column(db.PickleType(mutable=True), nullable=False)
+    jobNum = db.Column(db.PickleType(mutable=True), nullable=False)
+    checks = db.Column(db.PickleType(mutable=True), nullable=False)
+    user_name = db.Column(db.String(45))
 
-    def __init__(self, furnaceNum, modelNum, jobNum):
+    def __init__(self, furnaceNum, modelNum, jobNum, numOfWagon):
         self.furnaceNum = furnaceNum
         self.modelNum = modelNum
         self.jobNum = jobNum
         self.numOfWagon = numOfWagon
 
+    def getLogInMatrixOrder(self):
+        for x in range(31):  # up to 31 glass models
+            print(self.glasses[x] + "  A" + self.jobNum[x] + " ")
+            for y in range(21):
+                # print each glass model with four spaces then
+                print(self.checks[x][y] + " ")
+
     def __repr__(self):
         return self.furnaceNum
 
-'''
+
+# ------------GLOBALS--------------
+furnaces = [20]
 # ____________________FORMS______________________
 # Login form
 
@@ -102,13 +112,25 @@ class LogNavButtons(FlaskForm):
     remove = SubmitField("Remove")
     other = SubmitField("Other")
     print = SubmitField("print")
-    startBtnClicked = None
+    startClicked = 0
 
+    def setStartClicked():
+        if startClicked == 0:
+            startClicked = 1
 
-# ___________________ROUTES_____________________
+    def resetStartClicked():
+        if startClicked == 1:
+            startClicked = 0
 
+    def isStartClicked():
+        if startClicked == 1:
+            return True
+        else:
+            return False
 
-# home - landing page route
+        # ___________________ROUTES_____________________
+
+        # home - landing page route
 
 
 @app.route('/home', methods=['GET', 'POST'])
@@ -129,7 +151,7 @@ def home():
             tm = time.time()
             flash('Now logging time and labels... ' +
                   str(((tm / 1000) / 60) / 60), 'success')
-            LogNavButtons.startBtnClicked = 1
+            form.setStartClicked()
             return redirect(url_for('home'))
 
         # TODO - pauseTime grabs two instances of time (at a time), disabling all else until the second click, subtracting
@@ -201,6 +223,7 @@ def login():
             session['username'] = existing_user.username
             session['logged_in'] = True
             session['frontOrBack'] = existing_user.loadingSide
+
             # TODO - write js to fade out alert
             flash('You are now logged in!', 'success')
             return redirect(url_for('home'))
