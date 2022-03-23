@@ -1,14 +1,17 @@
+
 from myImports import *
 
 
-# application init and configurations
+# application initialization and configurations
 app = Flask(__name__)
 
+# TODO - when in actual priduction use, use an outside file for security
+# or use (*argv, **kwarg) to handle app password security
 # with open('/etc/config.json') as config_file:
 #    config = json.load(config_file)
 
 # TODO - change to environment variable
-app.config['SECRET_KEY'] = 'fuyao123'  # config.get('SECRET_KEY')
+app.config['SECRET_KEY'] = 'fuyao123'  # config.get('SECRET_KEY') SEE ABOVE to do
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://fuyao@localhost:3306/fuyao"
 app.config['SQLALCHEMY_ECHO'] = True
 
@@ -63,14 +66,11 @@ class Log(db.Model):
 
     def __repr__(self):
         return self.furnaceNum
+
 '''
 
-# ------------GLOBALS--------------
-furnaces = [20]
 # ____________________FORMS______________________
 # Login form
-
-
 class LoginForm(Form):
     username = StringField('Username', [validators.Length(
         min=6, max=30), validators.DataRequired()])
@@ -102,8 +102,8 @@ class LogNavButtons(FlaskForm):
     remove = SubmitField("Remove")
     other = SubmitField("Other")
     print = SubmitField("print")
-    startBtnClicked = None
-    pauseBtnClicked = None
+    startBtnClicked = None #TODO - I am certain class variables do not work
+    pauseBtnClicked = None # within WTForms classes. 118 - 134 should be removed
     pauseBtnCounter = None
 
     def setStartClicked():
@@ -120,16 +120,17 @@ class LogNavButtons(FlaskForm):
         else:
             return False
 
-        # ___________________ROUTES_____________________
-
-        # home - landing page route
 
 
+# ___________________ROUTE FUNCTIONS_____________________
+
+# home - landing page route
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     '''
     home(None) route.
     '''
+    # left for reference, when we start pulling from the db
     # blog = Blog.query.order_by(Blog.pub_date.desc()).all() <-left for DB query reference
 
     # instantiate an instance of the LogNavButtons class
@@ -293,7 +294,9 @@ def logout():
     return redirect(url_for('login'))
 
 
-@ app.before_request
+
+# FIXME - user is not blocked from home screen prior to login!!!!!
+@app.before_request
 def require_login():
     allowed_routes = ['login', 'setup']
     if request.endpoint not in allowed_routes and 'username' not in session:
