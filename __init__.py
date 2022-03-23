@@ -102,7 +102,9 @@ class LogNavButtons(FlaskForm):
     remove = SubmitField("Remove")
     other = SubmitField("Other")
     print = SubmitField("print")
-    startClicked = 0
+    startBtnClicked = None
+    pauseBtnClicked = None
+    pauseBtnCounter = None
 
     def setStartClicked():
         if startClicked == 0:
@@ -150,6 +152,13 @@ def home():
             tm = time.time()
             flash('Logging has been Paused!' +
                   str(((tm / 1000) / 60) / 60), 'warning')
+            # if the remainder of session['pauseBtnCounter'] equals 0, then the var is even
+            # thus, a beginning and end pause time has been recorded and the session var can
+            # be set to True to start a third pause session
+            pauseCount = session['pauseBtnCounter']
+            if pauseCount % 2 == 0:
+                session['pauseBtnClicked'] = True
+                session['pauseBtnCounter'] = pauseCount + 1
             return redirect(url_for('home'))
 
         # TODO - endTime grabs the last timestamp in the equation to decide total time for the calculation of total labels
@@ -157,6 +166,7 @@ def home():
             tm = time.time()
             flash('All logging and counts have stopped...' +
                   str(((tm / 1000) / 60) / 60), 'danger')
+            session['startBtnClicked'] = False
             return redirect(url_for('home'))
 
         # TODO - change presents a popup menu to enter the information for a new model for a mold change or print change
@@ -212,6 +222,9 @@ def login():
         if pbkdf2_sha256.verify(password, hashed):
             session['username'] = existing_user.username
             session['logged_in'] = True
+            session['startBtnClicked'] = False
+            session['pauseBtnClicked'] = False
+            session['pauseBtnCounter'] = int(0)
             session['frontOrBack'] = existing_user.loadingSide
 
             # TODO - write js to fade out alert
@@ -258,6 +271,9 @@ def setup():
             db.session.commit()
             session['username'] = new_user.username
             session['logged_in'] = True
+            session['startBtnClicked'] = False
+            session['pauseBtnClicked'] = False
+            session['pauseBtnCounter'] = int(0)
             return redirect(url_for('home'))
         elif len(existing_user) > 0:
             flash('That username is already in use, try again!', 'danger')
