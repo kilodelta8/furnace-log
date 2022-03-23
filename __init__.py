@@ -1,16 +1,6 @@
-# TODO - These are all of the imports used in the project
-# It may be worth  looking at placing them in a seperate file
-# then importing that single file just to cleanup this blob
-from flask import Flask, render_template, url_for, flash, session, request, redirect
-from flask import Flask, render_template
-from flask_wtf import FlaskForm
-from sqlalchemy import false, true
-from wtforms import Form, StringField, PasswordField, TextAreaField, SubmitField, validators, BooleanField
-from wtforms.validators import DataRequired
-from flask_sqlalchemy import SQLAlchemy
-from passlib.hash import pbkdf2_sha256
-import datetime
-import time
+
+from myImports import *
+
 
 # application initialization and configurations
 app = Flask(__name__)
@@ -56,7 +46,7 @@ class User(db.Model):
 class Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, nullable=False,
-                     default=datetime.utcnow)
+                     default=datetime.datetime.now(datetime.timezone.utc))
     furnaceNum = db.Column(db.Integer)
     shift = db.Column(db.Integer)
     glasses = db.Column(db.PickleType(mutable=True), nullable=False)
@@ -64,11 +54,8 @@ class Log(db.Model):
     checks = db.Column(db.PickleType(mutable=True), nullable=False)
     user_name = db.Column(db.String(45))
 
-    def __init__(self, furnaceNum, modelNum, jobNum, numOfWagon):
+    def __init__(self, furnaceNum):
         self.furnaceNum = furnaceNum
-        self.modelNum = modelNum
-        self.jobNum = jobNum
-        self.numOfWagon = numOfWagon
 
     def getLogInMatrixOrder(self):
         for x in range(31):  # up to 31 glass models
@@ -155,9 +142,9 @@ def home():
         # TODO - startTime grabs an instance of time as a starting point for logging of label counts
         if request.form.get('startTime', '') == 'Start':
             tm = time.time()
-            flash('Now logging time and labels... ' +
-                  str(((tm / 1000) / 60) / 60), 'success')
-            #create a session variable and set it to true
+            flash('Now logging time and labels at: ' +
+                  parseTime(str(time.ctime(tm))), 'success')
+            session['startTime'] = str(tm)
             session['startBtnClicked'] = True
             return redirect(url_for('home'))
 
@@ -165,22 +152,22 @@ def home():
         # the two and storing the total time for later subtraction from the total logging time.
         elif request.form.get('pauseTime', '') == 'Pause':
             tm = time.time()
-            flash('Logging has been Paused!' +
-                  str(((tm / 1000) / 60) / 60), 'warning')
+            flash('Logging has been Paused at: ' +
+                  parseTime(str(time.ctime(tm))), 'warning')
             # if the remainder of session['pauseBtnCounter'] equals 0, then the var is even
             # thus, a beginning and end pause time has been recorded and the session var can
             # be set to True to start a third pause session
-            pauseCount = session['pauseBtnCounter']
-            if pauseCount % 2 == 0:
-                session['pauseBtnClicked'] = True
-                session['pauseBtnCounter'] = pauseCount + 1 # FIXME - is this working??
+            # pauseCount=session['pauseBtnCounter']
+            # if pauseCount % 2 == 0:
+            #    session['pauseBtnClicked']=True
+            #    session['pauseBtnCounter']=pauseCount + 1
             return redirect(url_for('home'))
 
         # TODO - endTime grabs the last timestamp in the equation to decide total time for the calculation of total labels
         elif request.form.get('endTime', '') == 'Stop':
             tm = time.time()
-            flash('All logging and counts have stopped...' +
-                  str(((tm / 1000) / 60) / 60), 'danger')
+            flash('All logging and counts have stopped at: ' +
+                  parseTime(str(time.ctime(tm))), 'danger')
             session['startBtnClicked'] = False
             return redirect(url_for('home'))
 
@@ -216,13 +203,13 @@ def home():
 
 
 # TODO - can this route be placed underneath the /login route???
-@app.route('/')
+@ app.route('/')
 def index():
     return redirect(url_for('login'))
 
 
 # login to account
-@app.route('/login', methods=['GET', 'POST'])
+@ app.route('/login', methods=['GET', 'POST'])
 def login():
     '''
     login(None) route.  This method allows a user to login to the system.
@@ -256,13 +243,13 @@ def login():
 
 
 # signup for an account
-@app.route('/setup', methods=['GET', 'POST'])
+@ app.route('/setup', methods=['GET', 'POST'])
 def setup():
     '''
     redirect/render_template <- setup(none): A route that displays the setup page to add new users.
     A new user is either load (check box yes), indicating the user will be at the front
     of the furnace or unload (check box unchecked) for the rear unload area of the furnace.
-    The position of the user (load/unload) will dictate controls available on the 
+    The position of the user (load/unload) will dictate controls available on the
     log (home) screen of each user.
     '''
     form = RegistrationForm(request.form)
@@ -298,13 +285,14 @@ def setup():
 
 
 # logout user
-@app.route('/logout')
+@ app.route('/logout')
 def logout():
     session.pop('username', None)
     session['logged_in'] = False
     session['frontOrBack'] = None
     flash('You have been logged out!', 'success')
     return redirect(url_for('login'))
+
 
 
 # FIXME - user is not blocked from home screen prior to login!!!!!
