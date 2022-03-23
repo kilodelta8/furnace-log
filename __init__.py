@@ -1,4 +1,4 @@
-
+# import everything (*) from myImports.py
 from myImports import *
 
 
@@ -22,8 +22,6 @@ db = SQLAlchemy(app)
 # ---------------MODELS--------------------
 # TODO finish model befores instantiation
 # user model
-
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # furnaceNum = db.Column(db.Integer)
@@ -69,6 +67,7 @@ class Log(db.Model):
 
 '''
 
+
 # ____________________FORMS______________________
 # Login form
 class LoginForm(Form):
@@ -90,7 +89,7 @@ class RegistrationForm(Form):
         'Loading Side', false_values=(False, 0))
     submit = SubmitField('Submit')
 
-# _______________NOT A FORM per say_______________
+
 
 
 class LogNavButtons(FlaskForm):
@@ -102,33 +101,17 @@ class LogNavButtons(FlaskForm):
     remove = SubmitField("Remove")
     other = SubmitField("Other")
     print = SubmitField("print")
-    startBtnClicked = None #TODO - I am certain class variables do not work
-    pauseBtnClicked = None # within WTForms classes. 118 - 134 should be removed
-    pauseBtnCounter = None
 
-    def setStartClicked():
-        if startClicked == 0:
-            startClicked = 1
-
-    def resetStartClicked():
-        if startClicked == 1:
-            startClicked = 0
-
-    def isStartClicked():
-        if startClicked == 1:
-            return True
-        else:
-            return False
 
 
 
 # ___________________ROUTE FUNCTIONS_____________________
 
-# home - landing page route
+# home - main logging page route
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     '''
-    home(None) route.
+    home(none) route.
     '''
     # left for reference, when we start pulling from the db
     # blog = Blog.query.order_by(Blog.pub_date.desc()).all() <-left for DB query reference
@@ -139,7 +122,8 @@ def home():
     # check for post request, if so: Which button posted the request?
     if request.method == 'POST':
 
-        # TODO - startTime grabs an instance of time as a starting point for logging of label counts
+        # grabs an instance of time as a starting point for logging of label counts
+        # and stores it in session variable and sets another session var to True for templating
         if request.form.get('startTime', '') == 'Start':
             tm = time.time()
             flash('Now logging time and labels at: ' +
@@ -148,19 +132,20 @@ def home():
             session['startBtnClicked'] = True
             return redirect(url_for('home'))
 
-        # TODO - pauseTime grabs two instances of time (at a time), disabling all else until the second click, subtracting
+        # grabs two instances of time (at a time), disabling all else until the second click, subtracting
         # the two and storing the total time for later subtraction from the total logging time.
+        # All of the pause times are processed in the PauseCalc() class "pc".
         elif request.form.get('pauseTime', '') == 'Pause':
             tm = time.time()
             flash('Logging has been Paused at: ' +
                   parseTime(str(time.ctime(tm))), 'warning')
-            # if the remainder of session['pauseBtnCounter'] equals 0, then the var is even
-            # thus, a beginning and end pause time has been recorded and the session var can
-            # be set to True to start a third pause session
-            # pauseCount=session['pauseBtnCounter']
-            # if pauseCount % 2 == 0:
-            #    session['pauseBtnClicked']=True
-            #    session['pauseBtnCounter']=pauseCount + 1
+            if pc.getPauseCount() == 0:
+                session['pauseBtnClicked'] = True
+                # TODO - need to convert time into a subtractable number
+                pc.addPauseTime(time.ctime(tm))
+            elif pc.getPauseCount() == 1:
+                session['pauseBtnClicked'] = False
+                pc.addPauseTime(time.ctime(tm))
             return redirect(url_for('home'))
 
         # TODO - endTime grabs the last timestamp in the equation to decide total time for the calculation of total labels
@@ -175,7 +160,7 @@ def home():
         # then updates the DB and present the last label count for the prior model
         elif request.form.get('change', '') == 'Change':
             tm = time.time()
-            flash('Change is working...', 'success')
+            flash('Change is working...' + str(pc.getPauseCount()) + " : " + str(pc.getTotalTimeToDeduct()), 'success')
             return redirect(url_for('home'))
 
         # TODO - add presents a pop up menu to add glass (should be in A setup menu)
@@ -305,4 +290,5 @@ def require_login():
 
 # <<<-------------------------------------------------------->>>
 if __name__ == '__main__':
+    pc = PauseCalc()
     app.run(debug=True)

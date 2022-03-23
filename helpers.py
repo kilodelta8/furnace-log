@@ -7,6 +7,7 @@ def parseTime(timeStamp):
     return timeStamp[10:19]
 
 
+# TODO - See DOCS > Documentation > .01
 class PauseCalc:
     '''
     class PauseCalc:
@@ -14,6 +15,7 @@ class PauseCalc:
     '''
     incomingPauseTimes = []
     totalTimeToDeduct = 0
+    count = 0
 
     def __init__(self) -> None:
         pass
@@ -26,11 +28,12 @@ class PauseCalc:
         The function the 3. resets the list back to None.  This allows for the program to mitigate Pause times when
         they are added, providing a single amount of time to be removed from the total shift time.
         '''
-        if self.incomingPauseTimes.len() == 2:
+        if self.count == 2:
             self.totalTimeToDeduct += self.incomingPauseTimes[0] - \
                 self.incomingPauseTimes[1]
-        for x in range(0, self.incomingPauseTimes.len()):
+        for x in range(0, len(self.incomingPauseTimes)):
             self.incomingPauseTimes[x] = None
+        self.count = 0
 
     def addPauseTime(self, time):
         '''
@@ -42,6 +45,7 @@ class PauseCalc:
         for times in self.incomingPauseTimes:
             if self.incomingPauseTimes[times] is None:
                 self.incomingPauseTimes[times] = time
+                self.count += 1
         self.calcTotalTimeToDeduct()
 
     def getTotalTimeToDeduct(self):
@@ -50,3 +54,9 @@ class PauseCalc:
         been added to the class.
         '''
         return self.totalTimeToDeduct
+
+    def getPauseCount(self):
+        '''
+        .
+        '''
+        return self.count

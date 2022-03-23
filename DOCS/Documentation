@@ -1,3 +1,10 @@
 Build Documentation*
 
-
+.01
+Currently the debate is between using session[] variables and utilizing a class to manage the
+pause times processing.  The class instance seems to work better than session[] vars.
+I am wondering if it would be beneficial to limit the session[] vars to flask related needs 
+only and build up the PauseCalc() class (helpers.py) to completely handle all other related 
+furnace and logging data into an overall Furnace() class, leaving flask completely for application 
+functions alone.
+This seems like a more ideal way to manage the data and system overall.
