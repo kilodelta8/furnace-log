@@ -1,13 +1,5 @@
-from flask import Flask, render_template, url_for, flash, session, request, redirect
-from flask import Flask, render_template
-from flask_wtf import FlaskForm
-from sqlalchemy import false, true
-from wtforms import Form, StringField, PasswordField, TextAreaField, SubmitField, validators, BooleanField
-from wtforms.validators import DataRequired
-from flask_sqlalchemy import SQLAlchemy
-from passlib.hash import pbkdf2_sha256
-import datetime
-import time
+from myImports import *
+
 
 # application init and configurations
 app = Flask(__name__)
@@ -47,10 +39,11 @@ class User(db.Model):
 
 
 # TODO - develop a model for a log sheet, suitable for a DB
+'''
 class Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, nullable=False,
-                     default=datetime.utcnow)
+                     default=datetime.datetime.now(datetime.timezone.utc))
     furnaceNum = db.Column(db.Integer)
     shift = db.Column(db.Integer)
     glasses = db.Column(db.PickleType(mutable=True), nullable=False)
@@ -58,11 +51,8 @@ class Log(db.Model):
     checks = db.Column(db.PickleType(mutable=True), nullable=False)
     user_name = db.Column(db.String(45))
 
-    def __init__(self, furnaceNum, modelNum, jobNum, numOfWagon):
+    def __init__(self, furnaceNum):
         self.furnaceNum = furnaceNum
-        self.modelNum = modelNum
-        self.jobNum = jobNum
-        self.numOfWagon = numOfWagon
 
     def getLogInMatrixOrder(self):
         for x in range(31):  # up to 31 glass models
@@ -73,7 +63,7 @@ class Log(db.Model):
 
     def __repr__(self):
         return self.furnaceNum
-
+'''
 
 # ------------GLOBALS--------------
 furnaces = [20]
@@ -150,8 +140,8 @@ def home():
         if request.form.get('startTime', '') == 'Start':
             tm = time.time()
             flash('Now logging time and labels... ' +
-                  str(((tm / 1000) / 60) / 60), 'success')
-            form.setStartClicked()
+                  str(tm), 'success')
+            # form.setStartClicked()
             return redirect(url_for('home'))
 
         # TODO - pauseTime grabs two instances of time (at a time), disabling all else until the second click, subtracting
