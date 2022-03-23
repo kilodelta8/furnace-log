@@ -143,7 +143,8 @@ def home():
             tm = time.time()
             flash('Now logging time and labels... ' +
                   str(tm), 'success')
-            # form.setStartClicked()
+            session['clickedStartTime'] = str(tm)
+            session['startBtnClicked'] = True
             return redirect(url_for('home'))
 
         # TODO - pauseTime grabs two instances of time (at a time), disabling all else until the second click, subtracting

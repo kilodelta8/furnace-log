@@ -1,0 +1,22 @@
+***IN order to keep track of session['variables'] variables (alphabetical as best I can track)***
+
+A
+B
+C
+session['clickedStartTime'] = str(tm)
+
+DEFGHIJK
+L
+session['logged_in'] = True
+
+MNO
+P
+session['pauseBtnClicked'] = False
+session['pauseBtnCounter'] = int(0)
+
+QR
+S
+session['startBtnClicked'] = False
+session['username'] = new_user.username
+
+TUVWXYZ
