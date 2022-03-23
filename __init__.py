@@ -1,3 +1,6 @@
+# TODO - These are all of the imports used in the project
+# It may be worth  looking at placing them in a seperate file
+# then importing that single file just to cleanup this blob
 from flask import Flask, render_template, url_for, flash, session, request, redirect
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
@@ -9,14 +12,16 @@ from passlib.hash import pbkdf2_sha256
 import datetime
 import time
 
-# application init and configurations
+# application initialization and configurations
 app = Flask(__name__)
 
+# TODO - when in actual priduction use, use an outside file for security
+# or use (*argv, **kwarg) to handle app password security
 # with open('/etc/config.json') as config_file:
 #    config = json.load(config_file)
 
 # TODO - change to environment variable
-app.config['SECRET_KEY'] = 'fuyao123'  # config.get('SECRET_KEY')
+app.config['SECRET_KEY'] = 'fuyao123'  # config.get('SECRET_KEY') SEE ABOVE to do
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://fuyao@localhost:3306/fuyao"
 app.config['SQLALCHEMY_ECHO'] = True
 
@@ -47,6 +52,7 @@ class User(db.Model):
 
 
 # TODO - develop a model for a log sheet, suitable for a DB
+'''
 class Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, nullable=False,
@@ -74,13 +80,10 @@ class Log(db.Model):
     def __repr__(self):
         return self.furnaceNum
 
+'''
 
-# ------------GLOBALS--------------
-furnaces = [20]
 # ____________________FORMS______________________
 # Login form
-
-
 class LoginForm(Form):
     username = StringField('Username', [validators.Length(
         min=6, max=30), validators.DataRequired()])
@@ -112,8 +115,8 @@ class LogNavButtons(FlaskForm):
     remove = SubmitField("Remove")
     other = SubmitField("Other")
     print = SubmitField("print")
-    startBtnClicked = None
-    pauseBtnClicked = None
+    startBtnClicked = None #TODO - I am certain class variables do not work
+    pauseBtnClicked = None # within WTForms classes. 118 - 134 should be removed
     pauseBtnCounter = None
 
     def setStartClicked():
@@ -130,16 +133,17 @@ class LogNavButtons(FlaskForm):
         else:
             return False
 
-        # ___________________ROUTES_____________________
-
-        # home - landing page route
 
 
+# ___________________ROUTE FUNCTIONS_____________________
+
+# home - landing page route
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     '''
     home(None) route.
     '''
+    # left for reference, when we start pulling from the db
     # blog = Blog.query.order_by(Blog.pub_date.desc()).all() <-left for DB query reference
 
     # instantiate an instance of the LogNavButtons class
@@ -153,7 +157,7 @@ def home():
             tm = time.time()
             flash('Now logging time and labels... ' +
                   str(((tm / 1000) / 60) / 60), 'success')
-
+            #create a session variable and set it to true
             session['startBtnClicked'] = True
             return redirect(url_for('home'))
 
@@ -169,7 +173,7 @@ def home():
             pauseCount = session['pauseBtnCounter']
             if pauseCount % 2 == 0:
                 session['pauseBtnClicked'] = True
-                session['pauseBtnCounter'] = pauseCount + 1
+                session['pauseBtnCounter'] = pauseCount + 1 # FIXME - is this working??
             return redirect(url_for('home'))
 
         # TODO - endTime grabs the last timestamp in the equation to decide total time for the calculation of total labels
@@ -303,6 +307,7 @@ def logout():
     return redirect(url_for('login'))
 
 
+# FIXME - user is not blocked from home screen prior to login!!!!!
 @app.before_request
 def require_login():
     allowed_routes = ['login', 'setup']
