@@ -141,9 +141,9 @@ def home():
         # TODO - startTime grabs an instance of time as a starting point for logging of label counts
         if request.form.get('startTime', '') == 'Start':
             tm = time.time()
-            flash('Now logging time and labels... ' +
-                  str(tm), 'success')
-            session['clickedStartTime'] = str(tm)
+            flash('Now logging time and labels at: ' +
+                  parseTime(str(time.ctime(tm))), 'success')
+            session['startTime'] = str(tm)
             session['startBtnClicked'] = True
             return redirect(url_for('home'))
 
@@ -151,22 +151,22 @@ def home():
         # the two and storing the total time for later subtraction from the total logging time.
         elif request.form.get('pauseTime', '') == 'Pause':
             tm = time.time()
-            flash('Logging has been Paused!' +
-                  str(((tm / 1000) / 60) / 60), 'warning')
+            flash('Logging has been Paused at: ' +
+                  parseTime(str(time.ctime(tm))), 'warning')
             # if the remainder of session['pauseBtnCounter'] equals 0, then the var is even
             # thus, a beginning and end pause time has been recorded and the session var can
             # be set to True to start a third pause session
-            pauseCount = session['pauseBtnCounter']
-            if pauseCount % 2 == 0:
-                session['pauseBtnClicked'] = True
-                session['pauseBtnCounter'] = pauseCount + 1
+            # pauseCount=session['pauseBtnCounter']
+            # if pauseCount % 2 == 0:
+            #    session['pauseBtnClicked']=True
+            #    session['pauseBtnCounter']=pauseCount + 1
             return redirect(url_for('home'))
 
         # TODO - endTime grabs the last timestamp in the equation to decide total time for the calculation of total labels
         elif request.form.get('endTime', '') == 'Stop':
             tm = time.time()
-            flash('All logging and counts have stopped...' +
-                  str(((tm / 1000) / 60) / 60), 'danger')
+            flash('All logging and counts have stopped at: ' +
+                  parseTime(str(time.ctime(tm))), 'danger')
             session['startBtnClicked'] = False
             return redirect(url_for('home'))
 
@@ -202,13 +202,13 @@ def home():
 
 
 # TODO - can this route be placed underneath the /login route???
-@app.route('/')
+@ app.route('/')
 def index():
     return redirect(url_for('login'))
 
 
 # login to account
-@app.route('/login', methods=['GET', 'POST'])
+@ app.route('/login', methods=['GET', 'POST'])
 def login():
     '''
     login(None) route.  This method allows a user to login to the system.
@@ -242,13 +242,13 @@ def login():
 
 
 # signup for an account
-@app.route('/setup', methods=['GET', 'POST'])
+@ app.route('/setup', methods=['GET', 'POST'])
 def setup():
     '''
     redirect/render_template <- setup(none): A route that displays the setup page to add new users.
     A new user is either load (check box yes), indicating the user will be at the front
     of the furnace or unload (check box unchecked) for the rear unload area of the furnace.
-    The position of the user (load/unload) will dictate controls available on the 
+    The position of the user (load/unload) will dictate controls available on the
     log (home) screen of each user.
     '''
     form = RegistrationForm(request.form)
@@ -284,7 +284,7 @@ def setup():
 
 
 # logout user
-@app.route('/logout')
+@ app.route('/logout')
 def logout():
     session.pop('username', None)
     session['logged_in'] = False
@@ -293,7 +293,7 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.before_request
+@ app.before_request
 def require_login():
     allowed_routes = ['login', 'setup']
     if request.endpoint not in allowed_routes and 'username' not in session:

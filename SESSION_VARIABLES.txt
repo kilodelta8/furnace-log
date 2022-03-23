@@ -3,7 +3,6 @@
 A
 B
 C
-session['clickedStartTime'] = str(tm)
 
 DEFGHIJK
 L
@@ -17,6 +16,10 @@ session['pauseBtnCounter'] = int(0)
 QR
 S
 session['startBtnClicked'] = False
+session['startTime'] = str(tm)
+
+T
+U
 session['username'] = new_user.username
 
-TUVWXYZ
+VWXYZ
