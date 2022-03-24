@@ -53,3 +53,69 @@ Pause times total: -53.413025379180911
 22:29:30 >>  Logged out.
 END
 
+
+Saved at: Wed Mar 23 22:33:43 2022Shift: 322:32:45 >>  22 32 45Logged in.
+22:32:47 >>  Start button clicked.
+[1648089171.8418565] 1
+22:32:51 >>  Pause button clicked.
+[1648089171.8418565, 1648089175.745152] 1
+Pause times total: -3.90329551696777341
+22:32:55 >>  UnPause button clicked.
+22:33:00 >>  Stop button clicked.
+22:33:43 >>  Logged out.
+END
+
+
+Saved at: Wed Mar 23 22:33:44 2022Shift: 322:32:45 >>  22 32 45Logged in.
+22:32:47 >>  Start button clicked.
+[1648089171.8418565] 1
+22:32:51 >>  Pause button clicked.
+[1648089171.8418565, 1648089175.745152] 1
+Pause times total: -3.90329551696777341
+22:32:55 >>  UnPause button clicked.
+22:33:00 >>  Stop button clicked.
+22:33:43 >>  Logged out.
+22:33:44 >>  Logged out.
+END
+
+
+Saved at: Wed Mar 23 22:33:57 2022Shift: 322:32:45 >>  22 32 45Logged in.
+22:32:47 >>  Start button clicked.
+[1648089171.8418565] 1
+22:32:51 >>  Pause button clicked.
+[1648089171.8418565, 1648089175.745152] 1
+Pause times total: -3.90329551696777341
+22:32:55 >>  UnPause button clicked.
+22:33:00 >>  Stop button clicked.
+22:33:43 >>  Logged out.
+22:33:44 >>  Logged out.
+22:33:57 >>  Logged out.
+END
+
+
+Saved at: Wed Mar 23 22:35:09 2022Shift: 322:32:45 >>  22 32 45Logged in.
+22:32:47 >>  Start button clicked.
+[1648089171.8418565] 1
+22:32:51 >>  Pause button clicked.
+[1648089171.8418565, 1648089175.745152] 1
+Pause times total: -3.90329551696777341
+22:32:55 >>  UnPause button clicked.
+22:33:00 >>  Stop button clicked.
+22:33:43 >>  Logged out.
+22:33:44 >>  Logged out.
+22:33:57 >>  Logged out.
+22:35:09 >>  Logged out.
+END
+
+
+Saved at: Wed Mar 23 22:36:39 2022Shift: 322:36:01 >>  22 36 01Logged in.
+22:36:05 >>  Start button clicked.
+[1648089370.1320765] 1
+22:36:10 >>  Pause button clicked.
+[1648089370.1320765, 1648089374.602629] 1
+Pause times total: -4.4705524444580081
+22:36:14 >>  UnPause button clicked.
+22:36:19 >>  Stop button clicked.
+22:36:39 >>  Logged out.
+END
+
