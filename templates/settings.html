@@ -1,7 +1,27 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<h2>Furnace Settings</h2>
-<h4>Under Construction, turn back now</h4>
-<a href="{{url_for('home')}}">RETURN</a>
+<div class="container">
+    <h2>Furnace Settings</h2>
+    <h4 style="color: crimson;">Under Construction, turn back now</h4>
+    <a href="/home">RETURN</a>
+    <hr />
+    <div class="container">
+        {% from 'includes/_formutility.html' import render_field %}
+        <form action="" method="POST"><!--(action NOT NEEDED PER FORM HELPER)-->
+            <div class="mx-auto">
+                {{render_field(form.wagonCount, class_="form-control")}}
+            </div>
+            <div class="mx-auto">
+                {{render_field(form.furnaceNum, class_="form-control")}}
+            </div>
+            <div class="mx-auto">
+                {{render_field(form.speed, class_="form-control")}}
+            </div>
+            <br />
+            <input type="submit" class="btn btn-primary" value="Update" />
+        </form>
+    </div>
+</div>
+
 {% endblock %}

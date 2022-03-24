@@ -119,3 +119,140 @@ Pause times total: -4.4705524444580081
 22:36:39 >>  Logged out.
 END
 
+
+Saved at: Thu Mar 24 01:01:25 2022Shift: 0[1648098082.026223] 1
+01:01:22 >>  Pause button clicked.
+01:01:25 >>  Logged out.
+END
+
+
+Saved at: Thu Mar 24 01:12:07 2022Shift: 001:12:07 >>  Logged out.
+END
+
+
+Saved at: Thu Mar 24 02:37:36 2022Shift: 002:37:36 >>  Logged out.
+END
+
+
+Saved at: Thu Mar 24 02:43:33 2022Shift: 302:37:36 >>  Logged out.
+02:37:40 >>  02 37 40Logged in.
+02:37:45 >>  Start button clicked.
+[1648103877.968] 1
+02:37:57 >>  Pause button clicked.
+[1648103877.968, 1648104173.306] 1
+Pause times total: -4.922 minutes.  class count > 1
+02:42:53 >>  UnPause button clicked.
+02:43:16 >>  Stop button clicked.
+02:43:33 >>  Logged out.
+END
+
+
+Saved at: Thu Mar 24 02:59:38 2022Shift: 302:37:36 >>  Logged out.
+02:37:40 >>  02 37 40Logged in.
+02:37:45 >>  Start button clicked.
+[1648103877.968] 1
+02:37:57 >>  Pause button clicked.
+[1648103877.968, 1648104173.306] 1
+Pause times total: -4.922 minutes.  class count > 1
+02:42:53 >>  UnPause button clicked.
+02:43:16 >>  Stop button clicked.
+02:43:33 >>  Logged out.
+02:45:04 >>  02 45 04Logged in.
+02:45:10 >>  Remove button clicked.
+02:50:36 >>  Stop button clicked.
+02:59:38 >>  Logged out.
+END
+
+
+Saved at: Thu Mar 24 03:04:29 2022Shift: 302:37:36 >>  Logged out.
+02:37:40 >>  02 37 40Logged in.
+02:37:45 >>  Start button clicked.
+[1648103877.968] 1
+02:37:57 >>  Pause button clicked.
+[1648103877.968, 1648104173.306] 1
+Pause times total: -4.922 minutes.  class count > 1
+02:42:53 >>  UnPause button clicked.
+02:43:16 >>  Stop button clicked.
+02:43:33 >>  Logged out.
+02:45:04 >>  02 45 04Logged in.
+02:45:10 >>  Remove button clicked.
+02:50:36 >>  Stop button clicked.
+02:59:38 >>  Logged out.
+03:04:23 >>  03 04 23Logged in.
+03:04:29 >>  Logged out.
+END
+
+
+Saved at: Thu Mar 24 03:26:23 2022Shift: 302:37:36 >>  Logged out.
+02:37:40 >>  02 37 40Logged in.
+02:37:45 >>  Start button clicked.
+[1648103877.968] 1
+02:37:57 >>  Pause button clicked.
+[1648103877.968, 1648104173.306] 1
+Pause times total: -4.922 minutes.  class count > 1
+02:42:53 >>  UnPause button clicked.
+02:43:16 >>  Stop button clicked.
+02:43:33 >>  Logged out.
+02:45:04 >>  02 45 04Logged in.
+02:45:10 >>  Remove button clicked.
+02:50:36 >>  Stop button clicked.
+02:59:38 >>  Logged out.
+03:04:23 >>  03 04 23Logged in.
+03:04:29 >>  Logged out.
+03:26:05 >>  03 26 05Logged in.
+03:26:23 >>  Logged out.
+END
+
+
+Saved at: Thu Mar 24 03:31:06 2022Shift: 302:37:36 >>  Logged out.
+02:37:40 >>  02 37 40Logged in.
+02:37:45 >>  Start button clicked.
+[1648103877.968] 1
+02:37:57 >>  Pause button clicked.
+[1648103877.968, 1648104173.306] 1
+Pause times total: -4.922 minutes.  class count > 1
+02:42:53 >>  UnPause button clicked.
+02:43:16 >>  Stop button clicked.
+02:43:33 >>  Logged out.
+02:45:04 >>  02 45 04Logged in.
+02:45:10 >>  Remove button clicked.
+02:50:36 >>  Stop button clicked.
+02:59:38 >>  Logged out.
+03:04:23 >>  03 04 23Logged in.
+03:04:29 >>  Logged out.
+03:26:05 >>  03 26 05Logged in.
+03:26:23 >>  Logged out.
+03:31:01 >>  03 31 01Logged in.
+03:31:06 >>  Logged out.
+END
+
+
+Saved at: Thu Mar 24 03:31:30 2022Shift: 302:37:36 >>  Logged out.
+02:37:40 >>  02 37 40Logged in.
+02:37:45 >>  Start button clicked.
+[1648103877.968] 1
+02:37:57 >>  Pause button clicked.
+[1648103877.968, 1648104173.306] 1
+Pause times total: -4.922 minutes.  class count > 1
+02:42:53 >>  UnPause button clicked.
+02:43:16 >>  Stop button clicked.
+02:43:33 >>  Logged out.
+02:45:04 >>  02 45 04Logged in.
+02:45:10 >>  Remove button clicked.
+02:50:36 >>  Stop button clicked.
+02:59:38 >>  Logged out.
+03:04:23 >>  03 04 23Logged in.
+03:04:29 >>  Logged out.
+03:26:05 >>  03 26 05Logged in.
+03:26:23 >>  Logged out.
+03:31:01 >>  03 31 01Logged in.
+03:31:06 >>  Logged out.
+03:31:25 >>  03 31 25Logged in.
+03:31:30 >>  Logged out.
+END
+
+
+Saved at: Thu Mar 24 03:53:51 2022Shift: 003:53:44 >>  Stop button clicked.
+03:53:51 >>  Logged out.
+END
+

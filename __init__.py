@@ -32,9 +32,10 @@ class User(db.Model):
     password = db.Column(db.String(250))
     loadingSide = db.Column(db.Boolean(), nullable=False)
 
-    def __init__(self, username, password, loadingSide):
+    def __init__(self, username, password, furnNum, loadingSide):
         self.username = username
         self.password = password
+        self.furnaceNum = furnNum
         self.loadingSide = loadingSide
 
     def __repr__(self):
@@ -95,6 +96,15 @@ class RegistrationForm(Form):
 
 
 
+# Settings form
+class SettingsForm(Form):
+    wagonCount = StringField('Wagon Count', [validators.Length(min=2, max=2)])
+    furnaceNum = StringField('Furnace Number', [validators.Length(min=1, max=2)])
+    speed = StringField('Speed', [validators.Length(min=1, max=2), validators.DataRequired()])
+    submit = SubmitField('Update')
+
+
+
 
 class LogNavButtons(FlaskForm):
     startTime = SubmitField('Start')
@@ -142,8 +152,9 @@ def home():
         # All of the pause times are processed in the PauseCalc() class "pc".
         elif request.form.get('pauseTime', '') == 'Pause' or request.form.get('pauseTime', '') == 'UnPause':
             if furnace.getPauseCount() == 0:
+                # FIXME - Check if time since epoch UTC same for Win/Mac
+                # grab time in seconds since epoch UTC
                 tm = time.time()
-                # TODO - need to convert time into a subtractable number
                 furnace.addPauseTime(tm)
                 flash('Logging has been Paused at: ' + parseTime(str(time.ctime(tm))), 'warning')
                 session['pauseBtnClicked'] = True
@@ -162,31 +173,20 @@ def home():
             flash('All logging and counts have stopped at: ' +
                   parseTime(str(time.ctime(tm))), 'danger')
             session['startBtnClicked'] = False
-            furnace.writeToLog("Stop button clicked.") # TODO - hardcoded, remove!
-            return redirect(url_for('home'))
+            furnace.writeToLog("Stop button clicked.")
+            # TODO - redirect to a final summation page
+            return redirect(url_for('endofshift'))
 
-        # TODO - change presents a popup menu to enter the information for a new model for a mold change or print change
+        # TODO - enter the information for a new model for a mold change or print change
         # then updates the DB and present the last label count for the prior model
-        elif request.form.get('change', '') == 'Change':
-            tm = time.time()
-            flash('Change is working...' + str(furnace.getPauseCount()) + " : " + str(furnace.getTotalTimeToDeduct()), 'success')
-            furnace.writeToLog("Change button clicked.") # TODO - hardcoded, remove!
-            return redirect(url_for('home'))
-
-        # TODO - add presents a pop up menu to add glass (should be in A setup menu)
-        elif request.form.get('add', '') == 'Add':
-            flash('Add button is working', 'success')
-            furnace.writeToLog("Add button clicked.") # TODO - hardcoded, remove!
-            return redirect(url_for('home'))
-
-        # TODO - remove may be redundant and not necassary (if so, should be in A setup menu)
+        # merely by selecting mold change from mouse pop up menu
+        
+        # jumps to settings page
         elif request.form.get('settings', '') == 'Settings':
-            flash('Remove button is working', 'success')
-            furnace.writeToLog("Remove button clicked.") # TODO - hardcoded, remove!
             return redirect(url_for('settings'))
 
-        # TODO - other.....for what????
-        elif request.form.get('log', '') == 'Log':
+        # jumps to developer log page - soon to be depricated
+        elif request.form.get('log', '') == 'Dev_Log':
             flash('This log is for development purposes only and will be removed from regular user interface in the future!', 'danger')
             return redirect(url_for('log'))
 
@@ -200,10 +200,7 @@ def home():
     return render_template('home.html', title='Furnace Log', form=form)
 
 
-# TODO - can this route be placed underneath the /login route???
-@ app.route('/')
-def index():
-    return redirect(url_for('login'))
+
 
 
 # login to account
@@ -227,7 +224,7 @@ def login():
             session['pauseBtnCounter'] = int(0)
             session['frontOrBack'] = existing_user.loadingSide
             furnace.setFurnaceShift(3) # TODO - hard coded, remove!
-            furnace.writeToLog(str(getTimeNow()) + "Logged in.") # TODO - hardcoded, remove!
+            furnace.writeToLog("Logged in.")
             # TODO - write js to fade out alert
             flash('You are now logged in!', 'success')
             return redirect(url_for('home'))
@@ -242,6 +239,13 @@ def login():
 
 
 
+# index route .
+@ app.route('/')
+def index():
+    return redirect(url_for('login'))
+
+
+
 # log route - to view the class log file
 @app.route('/log')
 def log():
@@ -249,10 +253,37 @@ def log():
     return render_template('log.html', form=form)
 
 
+
 # settings route to input and change furnace info
-@app.route('/settings')
+@app.route('/settings', methods=['GET', 'POST'])
 def settings():
-    return render_template('settings.html')
+    username = session['username']
+    existing_user = User.query.filter_by(username=username).first()
+    form = SettingsForm(request.form)
+    print(existing_user)
+    if request.method == 'POST' and form.validate():
+        wagonCount = request.form['wagonCount']
+        furnaceNum = request.form['furnaceNum']
+        speed = request.form['speed']
+
+        existing_user.wagonCount = wagonCount
+        existing_user.furnaceNum = furnaceNum
+        existing_user.furnaceSpeed = speed
+        db.session.commit()
+
+        furnace.setWagonCount(wagonCount)
+        furnace.setFurnaceNum(furnaceNum)
+        furnace.setFurnaceSpeed(speed)
+        return redirect(url_for('home'))
+    return render_template('settings.html', form=form)
+
+
+
+# end of shift landing page
+@app.route('/endofshift')
+def endofshift():
+    return render_template('endofshift.html')
+
 
 
 # signup for an account
@@ -270,6 +301,7 @@ def setup():
         username = request.form['username']
         password = request.form['password']
         verify = request.form['verify']
+        furnaceNum = request.form['furnaceNumber']
         loadingSide = request.form.get('loadingSide')
         existing_user = User.query.filter_by(username=username).first()
         if password != verify:
@@ -281,14 +313,20 @@ def setup():
             else:
                 loadingSide = True
             new_user = User(username, pbkdf2_sha256.hash(
-                password), loadingSide)
+                password), furnaceNum, loadingSide)
             db.session.add(new_user)
             db.session.commit()
+            # FIXME - what needs to go and what needs to stay? login_required uses some of these
             session['username'] = new_user.username
             session['logged_in'] = True
             session['startBtnClicked'] = False
             session['pauseBtnClicked'] = False
-            furnace.writeToLog(str(getTimeNow()) + "User created & logged in.") # TODO - hardcoded, remove!
+            session['furnaceNumber'] = new_user.furnaceNum
+            # FIXME - what needs to go and what needs to stay? some functionality currently uses 
+            # some of these vs session[vars]
+            furnace.furnaceNum(new_user.furnaceNum)
+            furnace.setLoadSideOrNot(new_user.loadingSide)
+            furnace.writeToLog("User created & logged in.")
             return redirect(url_for('home'))
         elif len(existing_user) > 0:
             flash('That username is already in use, try again!', 'danger')
@@ -297,28 +335,32 @@ def setup():
         return render_template('setup.html', title='Setup User', form=form)
 
 
+
 # logout user
 @ app.route('/logout')
 def logout():
     session.pop('username', None)
     session['logged_in'] = False
     session['frontOrBack'] = None
-    furnace.writeToLog("Logged out.") # TODO - hardcoded, remove!
+    furnace.writeToLog("Logged out.") 
     furnace.__del__()
+    # FIXME - message does not fade out after logging out
     flash('You have been logged out!', 'success')
     return redirect(url_for('login'))
 
 
 
-# FIXME - user is not blocked from home screen prior to login!!!!!
+# requirements to be met before pages can be viewed
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'setup']
+    allowed_routes = ['login']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
 
 # <<<-------------------------------------------------------->>>
 if __name__ == '__main__':
+    # global instance of Furnace class, right?
     furnace = Furnace()
+    # spin 'er up!
     app.run(debug=True)

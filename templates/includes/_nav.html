@@ -1,22 +1,17 @@
 <div id="top-menu" class="d-flex justify-content-between">
   <div class="d-flex justify-content-start align-items-start">
-    <!--TODO -->
     <nav class="my-2 my-md-0 mr-md-3">
-        <!--FIXME logged_in nav not showing only else nav-->
+      <span class="center">
         {% if session.logged_in == True %}
-        <span class="center">
-          <a class="btn btn-primary" href="/logout">Logout</a>
-          <a class="btn btn-primary" href="/setup">Admin</a>
-          {% else %}
-          <!--TODO only show admin panel for superusers-->
-          <!--<a class="btn btn-primary" href="/setup">Admin</a>-->
-          {% endif %}
-        </span>
-      </nav>
-    </div>
-    <!--FIXME 1. logged_in jpg not visible else page-->
-    <div class="d-flex justify-content-end align-items-end">
-    <img src="static/assets/FuyaoLogo3.jpg" alt="Fuyao Logo" width="67" height="45"/>
-    </div>
-    <!--<a class="btn btn-outline-primary" href="#">Go</a>-->
+        <a class="btn btn-primary" href="/logout">Logout</a>
+        <!--TODO only show admin panel for superusers only-->
+        <a class="btn btn-primary" href="/setup">Admin</a>
+        {% endif %}
+      </span>
+    </nav>
   </div>
+<!--FIXME 1. logged_in jpg not visible else page  UPDATE: Still insolved +4m later-->
+  <div class="d-flex justify-content-end align-items-end">
+    <img src="{{url_for('static',filename = '/assets/FuyaoLogo3.jpg')}}" alt="Fuyao Logo" width="67" height="45"/>
+  </div>
+</div>

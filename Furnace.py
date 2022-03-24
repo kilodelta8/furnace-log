@@ -113,7 +113,7 @@ class Furnace:
         '''
         self.totalTimeToDeduct += self.incomingPauseTimes[0] - \
             self.incomingPauseTimes[1]
-        self.log.append("Pause times total: " + str(self.totalTimeToDeduct) + str(self.count))
+        self.log.append("Pause times total: " + str(round(float(self.totalTimeToDeduct) / 60.0, 3)) + " minutes.  class count > " + str(self.count))
         self.count = 0
         self.incomingPauseTimes.clear()
 
@@ -126,16 +126,16 @@ class Furnace:
         if there are two times in the list then finds the difference and adds to a class variable.
         '''
         if self.count == 0:
-            self.incomingPauseTimes.append(time)
+            self.incomingPauseTimes.append(round(time, 3))
             self.count = 1
             self.log.append(str(self.incomingPauseTimes) + " " + str(self.count))
         elif self.count == 1:
-            self.incomingPauseTimes.append(time)
+            self.incomingPauseTimes.append(round(time, 3))
             self.log.append(str(self.incomingPauseTimes) + " " + str(self.count))
             self.calcTotalTimeToDeduct()
         else:
             self.log.append("count: " + self.count +
-                            " Pause times: " + self.incomingPauseTimes +
+                            " Pause times: " + str(self.incomingPauseTimes) +
                             " >>> ERROR") 
 
 
