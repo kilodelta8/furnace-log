@@ -6,10 +6,10 @@
       {% if session.logged_in == True %}
       <span class="center">
         <form method="post">
-          {% if session.startBtnClicked == True %}
-            <input class="btn btn-success" type="submit" name="startTime" value="Start" disabled>
-          {% else %}
+          {% if session.startBtnClicked == False %}
             <input class="btn btn-success" type="submit" name="startTime" value="Start">
+          {% else %}
+            <input class="btn btn-success" type="submit" name="startTime" value="Start" disabled>
           {% endif %}
           {% if session.pauseBtnClicked == True %}
             <input class="btn btn-warning" type="submit" name="pauseTime" value="UnPause">
@@ -22,8 +22,8 @@
             <div class="dropdown-content">
               <input id="dropdown-btn" class="btn btn-primary" type="submit" name="change" value="Change">
               <input id="dropdown-btn" class="btn btn-primary" type="submit" name="add" value="Add">
-              <input id="dropdown-btn" class="btn btn-primary" type="submit" name="remove" value="Remove">
-              <input id="dropdown-btn" class="btn btn-primary" type="submit" name="other" value="Other">
+              <input id="dropdown-btn" class="btn btn-primary" type="submit" name="settings" value="Settings">
+              <input id="dropdown-btn" class="btn btn-primary" type="submit" name="log" value="Log">
               <input id="dropdown-btn" class="btn btn-primary" type="submit" name="print" value="Print">
               <input id="dropdown-btn" class="btn btn-danger" type="submit" name="x" value="x">
             </div>

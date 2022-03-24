@@ -24,7 +24,9 @@ db = SQLAlchemy(app)
 # user model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # furnaceNum = db.Column(db.Integer)
+    furnaceNum = db.Column(db.Integer)
+    furnaceSpeed = db.Column(db.Integer)
+    wagonCount = db.Column(db.Integer)
     # logId = db.Column(db.Integer, db.ForeignKey('log.id'), nullable=False)
     username = db.Column(db.String(30))
     password = db.Column(db.String(250))
@@ -85,6 +87,8 @@ class RegistrationForm(Form):
     password = PasswordField(
         'Password', [validators.Length(min=7), validators.DataRequired()])
     verify = PasswordField('Verify Password', [validators.DataRequired()])
+    furnaceNumber = StringField('Furnace Number', [validators.length(
+        min=1, max=2), validators.DataRequired()])
     loadingSide = BooleanField(
         'Loading Side', false_values=(False, 0))
     submit = SubmitField('Submit')
@@ -130,22 +134,26 @@ def home():
                   parseTime(str(time.ctime(tm))), 'success')
             session['startTime'] = str(tm)
             session['startBtnClicked'] = True
+            furnace.writeToLog("Start button clicked.")
             return redirect(url_for('home'))
 
         # grabs two instances of time (at a time), disabling all else until the second click, subtracting
         # the two and storing the total time for later subtraction from the total logging time.
         # All of the pause times are processed in the PauseCalc() class "pc".
-        elif request.form.get('pauseTime', '') == 'Pause':
-            tm = time.time()
-            flash('Logging has been Paused at: ' +
-                  parseTime(str(time.ctime(tm))), 'warning')
-            if pc.getPauseCount() == 0:
-                session['pauseBtnClicked'] = True
+        elif request.form.get('pauseTime', '') == 'Pause' or request.form.get('pauseTime', '') == 'UnPause':
+            if furnace.getPauseCount() == 0:
+                tm = time.time()
                 # TODO - need to convert time into a subtractable number
-                pc.addPauseTime(time.ctime(tm))
-            elif pc.getPauseCount() == 1:
+                furnace.addPauseTime(tm)
+                flash('Logging has been Paused at: ' + parseTime(str(time.ctime(tm))), 'warning')
+                session['pauseBtnClicked'] = True
+                furnace.writeToLog("Pause button clicked.") # TODO - hardcoded, remove!
+            elif furnace.getPauseCount() == 1:
+                tm = time.time()
+                furnace.addPauseTime(tm)
+                flash('Logging has been UnPaused at: ' + parseTime(str(time.ctime(tm))), 'warning')
                 session['pauseBtnClicked'] = False
-                pc.addPauseTime(time.ctime(tm))
+                furnace.writeToLog("UnPause button clicked.") # TODO - hardcoded, remove!
             return redirect(url_for('home'))
 
         # TODO - endTime grabs the last timestamp in the equation to decide total time for the calculation of total labels
@@ -154,33 +162,38 @@ def home():
             flash('All logging and counts have stopped at: ' +
                   parseTime(str(time.ctime(tm))), 'danger')
             session['startBtnClicked'] = False
+            furnace.writeToLog("Stop button clicked.") # TODO - hardcoded, remove!
             return redirect(url_for('home'))
 
         # TODO - change presents a popup menu to enter the information for a new model for a mold change or print change
         # then updates the DB and present the last label count for the prior model
         elif request.form.get('change', '') == 'Change':
             tm = time.time()
-            flash('Change is working...' + str(pc.getPauseCount()) + " : " + str(pc.getTotalTimeToDeduct()), 'success')
+            flash('Change is working...' + str(furnace.getPauseCount()) + " : " + str(furnace.getTotalTimeToDeduct()), 'success')
+            furnace.writeToLog("Change button clicked.") # TODO - hardcoded, remove!
             return redirect(url_for('home'))
 
         # TODO - add presents a pop up menu to add glass (should be in A setup menu)
         elif request.form.get('add', '') == 'Add':
             flash('Add button is working', 'success')
+            furnace.writeToLog("Add button clicked.") # TODO - hardcoded, remove!
             return redirect(url_for('home'))
 
         # TODO - remove may be redundant and not necassary (if so, should be in A setup menu)
-        elif request.form.get('remove', '') == 'Remove':
+        elif request.form.get('settings', '') == 'Settings':
             flash('Remove button is working', 'success')
-            return redirect(url_for('home'))
+            furnace.writeToLog("Remove button clicked.") # TODO - hardcoded, remove!
+            return redirect(url_for('settings'))
 
         # TODO - other.....for what????
-        elif request.form.get('other', '') == 'Other':
-            flash('Other button is working', 'success')
-            return redirect(url_for('home'))
+        elif request.form.get('log', '') == 'Log':
+            flash('This log is for development purposes only and will be removed from regular user interface in the future!', 'danger')
+            return redirect(url_for('log'))
 
         # TODO - should this be here??  Pretty sure this is a whole 'nother world
         elif request.form.get('print', '') == 'Print':
             flash('Print button is working', 'success')
+            furnace.writeToLog("Print button clicked.") # TODO - hardcoded, remove!
             return redirect(url_for('home'))
 
     # If not post then get
@@ -213,7 +226,8 @@ def login():
             session['pauseBtnClicked'] = False
             session['pauseBtnCounter'] = int(0)
             session['frontOrBack'] = existing_user.loadingSide
-
+            furnace.setFurnaceShift(3) # TODO - hard coded, remove!
+            furnace.writeToLog(str(getTimeNow()) + "Logged in.") # TODO - hardcoded, remove!
             # TODO - write js to fade out alert
             flash('You are now logged in!', 'success')
             return redirect(url_for('home'))
@@ -227,8 +241,22 @@ def login():
         return render_template('login.html', title='Login!', form=form)
 
 
+
+# log route - to view the class log file
+@app.route('/log')
+def log():
+    form = furnace.getFurnaceLog()
+    return render_template('log.html', form=form)
+
+
+# settings route to input and change furnace info
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
+
 # signup for an account
-@ app.route('/setup', methods=['GET', 'POST'])
+@app.route('/setup', methods=['GET', 'POST'])
 def setup():
     '''
     redirect/render_template <- setup(none): A route that displays the setup page to add new users.
@@ -260,7 +288,7 @@ def setup():
             session['logged_in'] = True
             session['startBtnClicked'] = False
             session['pauseBtnClicked'] = False
-            session['pauseBtnCounter'] = int(0)
+            furnace.writeToLog(str(getTimeNow()) + "User created & logged in.") # TODO - hardcoded, remove!
             return redirect(url_for('home'))
         elif len(existing_user) > 0:
             flash('That username is already in use, try again!', 'danger')
@@ -275,6 +303,8 @@ def logout():
     session.pop('username', None)
     session['logged_in'] = False
     session['frontOrBack'] = None
+    furnace.writeToLog("Logged out.") # TODO - hardcoded, remove!
+    furnace.__del__()
     flash('You have been logged out!', 'success')
     return redirect(url_for('login'))
 
@@ -290,5 +320,5 @@ def require_login():
 
 # <<<-------------------------------------------------------->>>
 if __name__ == '__main__':
-    pc = PauseCalc()
+    furnace = Furnace()
     app.run(debug=True)

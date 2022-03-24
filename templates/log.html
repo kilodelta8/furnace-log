@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+    <h2>Furnace Error Log</h2>
+    <hr />
+    <a href="{{url_for('log')}}">RETURN</a>
+    <hr />
+    <div class="mx-auto">
+        {% if form|length == 0 %}
+            <p>Nothing currently in the Log.</p>
+        {% else %}
+            {% for item in form %}
+                <p style="background-color: darkgrey;">{{ item }}</p>
+            {% endfor %}
+        {% endif %}
+        <hr />
+    </div>
+    
+</div>
+{% endblock %}
