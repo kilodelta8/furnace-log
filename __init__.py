@@ -362,6 +362,6 @@ def require_login():
 if __name__ == '__main__':
     # global instance of Furnace class, right?
     furnace = Furnace()
-    furnace.setFurnaceLogging(True)
+    furnace.setFurnaceLogging()
     # spin 'er up!
     app.run(debug=True)

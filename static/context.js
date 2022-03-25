@@ -1,3 +1,8 @@
+/**
+ * Credit go's to:
+ * https://dev.to/stackfindover/how-to-create-a-custom-right-click-menu-54h2
+ */
+
 document.onclick = hideMenu; 
        document.oncontextmenu = rightClick; 
 

@@ -155,8 +155,8 @@ class Furnace:
         return self.count
 
 
-    def setFurnaceLogging(self, trueOrFalse):
-        self.furnaceLogActive = trueOrFalse
+    def setFurnaceLogging(self):
+        self.furnaceLogActive = True
 
 
     def writeToLog(self, data):
