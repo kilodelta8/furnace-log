@@ -1,6 +1,22 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<!--Context menu for right click-->
+<script type="text/javascript" src="/static/context.js" ></script>
+<link rel="stylesheet" href="/static/context.css" >
+<div id="contextMenu" class="context-menu" style="display: none"> 
+    <ul class="menu"> 
+        <li class="share"><a href="#"><i class="fa fa-share" aria-hidden="true"></i>F02</a></li> 
+        <li class="rename"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i>F03</a></li> 
+        <li class="link"><a href="#"><i class="fa fa-link" aria-hidden="true"></i>G01</a></li> 
+        <li class="copy"><a href="#"><i class="fa fa-copy" aria-hidden="true"></i>G07</a></li> 
+        <li class="paste"><a href="#"><i class="fa fa-paste" aria-hidden="true"></i>P06</a></li> 
+        <li class="download"><a href="#"><i class="fa fa-download" aria-hidden="true"></i>PT</a></li> 
+        <li class="trash"><a href="#"><i class="fa fa-trash" aria-hidden="true"></i>Empty</a></li> 
+    </ul> 
+</div> 
+
+
 <div class="jumbotron text-center">
     {% if session.frontOrBack == true %}
         <h2>Furnace {{session.username}} Loading Log</h2>

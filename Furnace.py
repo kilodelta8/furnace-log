@@ -20,6 +20,7 @@ class Furnace:
     totalTimeToDeduct = 0
     count = 0
     log = []
+    furnaceLogActive = False
 
 
 
@@ -154,22 +155,29 @@ class Furnace:
         return self.count
 
 
+    def setFurnaceLogging(self, trueOrFalse):
+        self.furnaceLogActive = trueOrFalse
+
+
     def writeToLog(self, data):
-        self.log.append(str(getFormattedTimeNow()) + " >>  " + data)
+        if self.furnaceLogActive:
+            self.log.append(str(getFormattedTimeNow()) + " >>  " + data)
 
 
     def printLog(self):
-        for item in len(self.log):
-            print(item)
+        if self.furnaceLogActive:
+            for item in len(self.log):
+                print(item)
 
 
     def saveLogAsFile(self):
-        id = ("Furnace_" + str(self.furnaceNum) + "_log.txt")
-        file = open(id, "a")
-        tm = time.time()
-        file.write("\nSaved at: " + str(time.ctime(tm)))
-        file.write("Shift: " + str(self.getFurnaceShift()))
-        for item in self.log:
-            file.write(str(item) + "\n")
-        file.write("END\n\n")
-        file.close()
+        if self.furnaceLogActive:
+            id = ("Furnace_" + str(self.furnaceNum) + "_log.txt")
+            file = open(id, "a")
+            tm = time.time()
+            file.write("\nSaved at: " + str(time.ctime(tm)))
+            file.write("Shift: " + str(self.getFurnaceShift()))
+            for item in self.log:
+                file.write(str(item) + "\n")
+            file.write("END\n\n")
+            file.close()
