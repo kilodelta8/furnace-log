@@ -8,3 +8,14 @@ only and build up the PauseCalc() class (helpers.py) to completely handle all ot
 furnace and logging data into an overall Furnace() class, leaving flask completely for application 
 functions alone.
 This seems like a more ideal way to manage the data and system overall.
+
+.02
+ALT codes for context menu
+    ALT 10004 -> heavy checkmark (good )
+    ALT 31    -> upside down black triangle (empty)
+
+.03
+User, Log, Glass                                                               array of array???
+*table LOG -> pk LogID, fk UserID, TimeStamp, Speed, Cols=21, Wagons=31, date, Glass[glass[arr]]
+*table USER -> pk UserID, Password, Shift, FurnaceNum
+Xtable GLASS -> pk GlassNum, JobNum, ADASmeasurements, Measurements

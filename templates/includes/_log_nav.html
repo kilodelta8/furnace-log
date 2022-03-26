@@ -6,11 +6,6 @@
       {% if session.logged_in == True %}
       <span class="center">
         <form method="post">
-          {% if session.startBtnClicked == False %}
-            <input class="btn btn-success" type="submit" name="startTime" value="Start">
-          {% else %}
-            <input class="btn btn-success" type="submit" name="startTime" value="Start" disabled>
-          {% endif %}
           {% if session.pauseBtnClicked == True %}
             <input class="btn btn-warning" type="submit" name="pauseTime" value="UnPause">
           {% else %}
@@ -23,7 +18,7 @@
               <input id="dropdown-btn" class="btn btn-primary" type="submit" name="settings" value="Settings">
               <input id="dropdown-btn" class="btn btn-primary" type="submit" name="log" value="Dev_Log">
               <input id="dropdown-btn" class="btn btn-primary" type="submit" name="print" value="Print">
-              <input id="dropdown-btn" class="btn btn-danger" type="submit" name="x" value="x">
+              <input id="dropdown-btn" class="btn btn-primary" type="submit" name="glass" value="Add Glass">
             </div>
           </div>
         </form>

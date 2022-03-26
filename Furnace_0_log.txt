@@ -1,0 +1,93 @@
+
+Saved at: Sat Mar 26 02:07:27 2022Shift: 302:07:09 >>  Logged in.
+02:07:27 >>  Logged out.
+END
+
+
+Saved at: Sat Mar 26 02:39:56 2022Shift: 302:13:08 >>  Logged in.
+02:39:19 >>  Start button clicked.
+02:39:53 >>  Stop button clicked.
+02:39:56 >>  Logged out.
+END
+
+
+Saved at: Sat Mar 26 02:49:18 2022Shift: 302:13:08 >>  Logged in.
+02:39:19 >>  Start button clicked.
+02:39:53 >>  Stop button clicked.
+02:39:56 >>  Logged out.
+02:46:42 >>  Logged in.
+[1648277284.827] 1
+02:48:04 >>  Pause button clicked.
+[1648277284.827, 1648277316.135] 1
+Pause times total: -0.522 minutes.  class count > 1
+02:48:36 >>  UnPause button clicked.
+02:49:06 >>  Stop button clicked.
+02:49:18 >>  Logged out.
+END
+
+
+Saved at: Sat Mar 26 02:59:49 2022Shift: 302:13:08 >>  Logged in.
+02:39:19 >>  Start button clicked.
+02:39:53 >>  Stop button clicked.
+02:39:56 >>  Logged out.
+02:46:42 >>  Logged in.
+[1648277284.827] 1
+02:48:04 >>  Pause button clicked.
+[1648277284.827, 1648277316.135] 1
+Pause times total: -0.522 minutes.  class count > 1
+02:48:36 >>  UnPause button clicked.
+02:49:06 >>  Stop button clicked.
+02:49:18 >>  Logged out.
+02:51:14 >>  Logged in.
+02:59:49 >>  Logged out.
+END
+
+
+Saved at: Sat Mar 26 03:00:43 2022Shift: 302:13:08 >>  Logged in.
+02:39:19 >>  Start button clicked.
+02:39:53 >>  Stop button clicked.
+02:39:56 >>  Logged out.
+02:46:42 >>  Logged in.
+[1648277284.827] 1
+02:48:04 >>  Pause button clicked.
+[1648277284.827, 1648277316.135] 1
+Pause times total: -0.522 minutes.  class count > 1
+02:48:36 >>  UnPause button clicked.
+02:49:06 >>  Stop button clicked.
+02:49:18 >>  Logged out.
+02:51:14 >>  Logged in.
+02:59:49 >>  Logged out.
+02:59:52 >>  Logged in.
+[1648278029.322] 1
+03:00:29 >>  Pause button clicked.
+03:00:41 >>  Stop button clicked.
+03:00:43 >>  Logged out.
+END
+
+
+Saved at: Sat Mar 26 03:19:14 2022Shift: 302:13:08 >>  Logged in.
+02:39:19 >>  Start button clicked.
+02:39:53 >>  Stop button clicked.
+02:39:56 >>  Logged out.
+02:46:42 >>  Logged in.
+[1648277284.827] 1
+02:48:04 >>  Pause button clicked.
+[1648277284.827, 1648277316.135] 1
+Pause times total: -0.522 minutes.  class count > 1
+02:48:36 >>  UnPause button clicked.
+02:49:06 >>  Stop button clicked.
+02:49:18 >>  Logged out.
+02:51:14 >>  Logged in.
+02:59:49 >>  Logged out.
+02:59:52 >>  Logged in.
+[1648278029.322] 1
+03:00:29 >>  Pause button clicked.
+03:00:41 >>  Stop button clicked.
+03:00:43 >>  Logged out.
+03:00:49 >>  Logged in.
+[1648278029.322, 1648278081.651] 1
+Pause times total: -1.394 minutes.  class count > 1
+03:01:21 >>  UnPause button clicked.
+03:19:14 >>  Logged out.
+END
+

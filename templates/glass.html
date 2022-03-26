@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+    <h2>Add New Glass <small> to the sytem</small></h2>
+    <h4 style="color: crimson;">Under Construction, turn back now</h4>
+    <a href="/home">RETURN</a>
+    <hr />
+    <div class="container">
+        {% from 'includes/_formutility.html' import render_field %}
+        <form action="" method="POST"><!--(action NOT NEEDED PER FORM HELPER)-->
+            <div class="mx-auto" aria-describedby="modelNumHelpBlock">
+                {{render_field(form.modelNum, class_="form-control")}}
+            </div>
+            <div id="modelNumHelpBlock" class="form-text">
+                Make certain you include the Prefix(FW-DW) and Suffix(GGY, etc)
+            </div>
+            <br>
+            <div class="mx-auto" aria-describedby="jobNumHelpBlock">
+                {{render_field(form.jobNum, class_="form-control")}}
+            </div>
+            <div id="jobNumHelpBlock" class="form-text">
+                Make certain you include the Prefix(A, X or T)
+            </div>
+            <br >
+            <div class="mx-auto" aria-describedby="adasNumHelpBlock">
+                {{render_field(form.adas, class_="form-control")}}
+            </div>
+            <div id="adasNumHelpBlock" class="form-text">
+                Make certain you enter in the form MM @ Distance (14@150)
+            </div>
+            <br>
+            <div class="mx-auto" aria-describedby="measureNumHelpBlock">
+                {{render_field(form.measure, class_="form-control")}}
+            </div>
+            <div id="measureNumHelpBlock" class="form-text">
+                Mid-Left and Mid-Middle only (21-16)
+            </div>
+            <br />
+            <input type="submit" class="btn btn-primary" value="Add" />
+        </form>
+        <hr id="btm" />
+    </div>
+</div>
+
+{% endblock %}

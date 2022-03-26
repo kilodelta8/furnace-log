@@ -31,6 +31,7 @@ class User(db.Model):
     username = db.Column(db.String(30))
     password = db.Column(db.String(250))
     loadingSide = db.Column(db.Boolean(), nullable=False)
+    log = db.relationship('Log', backref='user', lazy=True)
 
     def __init__(self, username, password, furnNum, loadingSide):
         self.username = username
@@ -42,33 +43,40 @@ class User(db.Model):
         return self.username
 
 
-# TODO - develop a model for a log sheet, suitable for a DB
-'''
-class Log(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DateTime, nullable=False,
-                     default=datetime.datetime.now(datetime.timezone.utc))
-    furnaceNum = db.Column(db.Integer)
-    shift = db.Column(db.Integer)
-    glasses = db.Column(db.PickleType(mutable=True), nullable=False)
-    jobNum = db.Column(db.PickleType(mutable=True), nullable=False)
-    checks = db.Column(db.PickleType(mutable=True), nullable=False)
-    user_name = db.Column(db.String(45))
+# glass model
+class Glass(db.Model):
+    glassNum = db.Column(db.String(15), primary_key=True)
+    jobNum = db.Column(db.String(7))
+    ADASmeasure = db.Column(db.String(12), nullable=True)
+    measurement = db.Column(db.String(8))
 
-    def __init__(self, furnaceNum):
-        self.furnaceNum = furnaceNum
-
-    def getLogInMatrixOrder(self):
-        for x in range(31):  # up to 31 glass models
-            print(self.glasses[x] + "  A" + self.jobNum[x] + " ")
-            for y in range(21):
-                # print each glass model with four spaces then
-                print(self.checks[x][y] + " ")
+    def __init__(self, glassnum, jobnum, adas, measure):
+        self.glassNum = glassnum
+        self.jobNum = jobnum
+        self.ADASmeasure = adas
+        self.measurement = measure
 
     def __repr__(self):
-        return self.furnaceNum
+        return self.glassNum
 
-'''
+
+
+# Log db model
+class Log(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),
+        nullable=False)
+    date = db.Column(db.DateTime, nullable=False,
+        default=datetime.utcnow)
+    speed = db.Column(db.Integer)
+    cols = db.Column(db.Integer)
+    wagons = db.Column(db.Integer)
+    # glass array with an array of checkmarks (pickletype???)
+    def __init__(self, userid, spd, wags):
+        self.user_id = userid
+        self.speed = spd
+        self.wagons  = wags
+
 
 
 # ____________________FORMS______________________
@@ -104,6 +112,20 @@ class SettingsForm(Form):
     submit = SubmitField('Update')
 
 
+# start of shit form
+class StartForm(Form):
+    wagonCount = StringField('Wagon Count', [validators.Length(min=2, max=2), validators.DataRequired()])
+    speed = StringField('Speed', [validators.Length(min=1, max=2), validators.DataRequired()])
+    furnaceNum = StringField('Furnace Number', [validators.Length(min=1, max=2), validators.DataRequired()])
+
+
+# glass add form
+class GlassForm(Form):
+    modelNum = StringField('Model Number', [validators.Length(min=6, max=11), validators.DataRequired()])
+    jobNum = StringField('Job Number', [validators.Length(min=6, max=7), validators.DataRequired()])
+    adas = StringField('ADAS', [validators.Length(min=4, max=10)])
+    measure = StringField('Measurements', [validators.Length(max=7), validators.DataRequired()])
+
 
 
 class LogNavButtons(FlaskForm):
@@ -121,6 +143,33 @@ class LogNavButtons(FlaskForm):
 
 # ___________________ROUTE FUNCTIONS_____________________
 
+
+# beginning of shift start form route
+@app.route('/start', methods=['GET', 'POST'])
+def start():
+    form = StartForm(request.form)
+    if request.method == 'POST' and form.validate():
+        wagoncount = request.form['wagonCount']
+        spd = request.form['speed']
+        furnacenum = request.form['furnaceNum'] 
+        username = session['username']
+        existing_user = User.query.filter_by(username=username).first()
+        new_log = Log(existing_user.id, spd, wagoncount)
+        db.session.add(new_log)
+        existing_user.furnaceNum = furnacenum
+        db.session.commit()
+        tm = time.time()
+        flash('Now logging time and labels at: ' +
+                parseTime(str(time.ctime(tm))), 'success')
+        session['startTime'] = str(tm)
+        session['startBtnClicked'] = True
+        furnace.writeToLog("Start button clicked.")
+        flash('Your shift has now started!', 'success') 
+        return redirect(url_for('home'))     
+    return render_template('start.html', title="Start of Shift", form=form)
+
+
+
 # home - main logging page route
 @app.route('/home', methods=['GET', 'POST'])
 def home():
@@ -136,21 +185,10 @@ def home():
     # check for post request, if so: Which button posted the request?
     if request.method == 'POST':
 
-        # grabs an instance of time as a starting point for logging of label counts
-        # and stores it in session variable and sets another session var to True for templating
-        if request.form.get('startTime', '') == 'Start':
-            tm = time.time()
-            flash('Now logging time and labels at: ' +
-                  parseTime(str(time.ctime(tm))), 'success')
-            session['startTime'] = str(tm)
-            session['startBtnClicked'] = True
-            furnace.writeToLog("Start button clicked.")
-            return redirect(url_for('home'))
-
         # grabs two instances of time (at a time), disabling all else until the second click, subtracting
         # the two and storing the total time for later subtraction from the total logging time.
         # All of the pause times are processed in the PauseCalc() class "pc".
-        elif request.form.get('pauseTime', '') == 'Pause' or request.form.get('pauseTime', '') == 'UnPause':
+        if request.form.get('pauseTime', '') == 'Pause' or request.form.get('pauseTime', '') == 'UnPause':
             if furnace.getPauseCount() == 0:
                 # FIXME - Check if time since epoch UTC same for Win/Mac
                 # grab time in seconds since epoch UTC
@@ -195,7 +233,9 @@ def home():
             flash('Print button is working', 'success')
             furnace.writeToLog("Print button clicked.") # TODO - hardcoded, remove!
             return redirect(url_for('home'))
-
+        elif request.form.get('glass', '') == 'Add Glass':
+            return redirect(url_for('glass'))
+            
     # If not post then get
     return render_template('home.html', title='Furnace Log', form=form)
 
@@ -227,7 +267,7 @@ def login():
             furnace.writeToLog("Logged in.")
             # TODO - write js to fade out alert
             flash('You are now logged in!', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('start'))
         elif not existing_user:
             flash('Error with your username!', 'danger')
             return redirect(url_for('login'))
@@ -276,6 +316,31 @@ def settings():
         furnace.setFurnaceSpeed(speed)
         return redirect(url_for('home'))
     return render_template('settings.html', form=form)
+
+
+
+# add glass to db route
+@app.route('/glass', methods=['GET', 'POST'])
+def glass():
+    form = GlassForm(request.form)
+    if request.method == 'POST':
+        modelnum = request.form['modelNum']
+        jobnum = request.form['jobNum']
+        adasnums = request.form['adas']
+        measurenums = request.form['measure']
+        existing_glass = Glass.query.filter_by(glassNum=modelnum).first()
+        if existing_glass == modelnum:
+            flash('Glass model ' + existing_glass + ' already exists!', 'danger')
+            return redirect(url_for('glass'))
+        if adasnums == None:
+            glass = Glass(modelnum, jobnum, None, measurenums)
+        else:
+            glass = Glass(modelnum, jobnum, adasnums, measurenums)
+        db.session.add(glass)
+        db.session.commit()
+        flash('New model ' + modelnum + ' added to the database!', 'success')
+        return redirect(url_for('home'))
+    return render_template('glass.html', title='Add Glass', form=form)
 
 
 

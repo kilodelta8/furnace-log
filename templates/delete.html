@@ -1,0 +1,43 @@
+
+<!--NOTES BELOW CODE - Testing page for jinja dynamic build design for table-->
+<!--passing in log = db representation for  render_template('home.html', title=title, log=log)-->
+
+<!--
+    1. print the table header
+    2. for each glass in a log, starting with the first entry
+        2a. place a row counter starting with 1 (max 31 || wagonCount)
+        2b. repopulate the current glass number or leave the field empty
+        2c. repopulate the current job number or leave empty
+    3. for each checkmark (data) for the current instance of glass (max 21 || setup a "cols" variable in db?)
+        3a. if there is data (checkmark) repopulate the field or leave blank
+        3b. continue until max cols 
+        3c. close the row with a </tr> tag
+    4. repeat #2 and #3 until max || wagonCount has been reached
+    5. end the main for loop
+-->
+<!--get date and info to place across the top of log or in logNav?-->
+<table class="tftable" style="border: 1;">
+    <tr id="hrow"><th id="hcounter">#</th><th id="hmodel">Model Num</th><th id="hjob">Job Number</th><th id="hcol"> 1</th><th id="hcol"> 2</th><th id="hcol"> 3</th><th id="hcol"> 4</th><th id="hcol"> 5</th><th id="hcol"> 6</th><th id="hcol"> 7</th><th id="hcol"> 8</th><th id="hcol"> 9</th><th id="hcol">10</th><th id="hcol">11</th><th id="hcol">12</th><th id="hcol">13</th><th id="hcol">14</th><th id="hcol">15</th><th id="hcol">16</th><th id="hcol">17</th><th id="hcol">18</th><th id="hcol">19</th><th id="hcol">20</th></tr>
+    {% for glass in log %}
+        <tr id="drow">
+            <td id="counter">{{ glass }}</td><!--TODO - This needs to be a number (1), incrementing to 30 or 31-->
+            {% if glass|length == 0 %}
+                <td id="model"></td><td id="job"></td>
+            {% else %}
+                <td id="model">{{ glass.model }}</td><td id="job">{{ glass.job }}</td>
+            {% endif %}
+            {% for col in log %}
+                {% if glass.data|length == 0 %}
+                    <td id="data"></td>
+                {% else %}
+                    <td id="data">{{ glass.data }}</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+<!--
+    .I gave each field a distinct id in the event JS may need it for element population, extraction
+    or whatever.
+-->
