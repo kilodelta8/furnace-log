@@ -23,3 +23,16 @@ document.onclick = hideMenu;
                 menu.style.top = e.pageY + "px"; 
             } 
         } 
+
+
+
+
+//https://eloquentjavascript.net/15_event.html
+//
+// what about "Focus Events" when a data cell is being manipulated??
+//
+// to change an elements contents
+//document.getElementById("demo").innerHTML = "I have changed!";
+//
+// to get the contents of an element
+//let html = document.getElementById("myP").innerHTML;

@@ -24,7 +24,7 @@ OLD:
 
 #DB Setup
     start a python shell
-    >>>from __init__ import db, User
+    >>>from __init__ import db, User, Glass, Log
     >>>db.create_all()
 
     #add objects

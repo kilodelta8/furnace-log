@@ -19,3 +19,11 @@ User, Log, Glass                                                               a
 *table LOG -> pk LogID, fk UserID, TimeStamp, Speed, Cols=21, Wagons=31, date, Glass[glass[arr]]
 *table USER -> pk UserID, Password, Shift, FurnaceNum
 Xtable GLASS -> pk GlassNum, JobNum, ADASmeasurements, Measurements
+
+.04
+When user clicks STOP, the final page is presented, BUT the user can change the address in the 
+address bar of the browser to a former page (that they should no longer access), and flask gladly
+returns the route.
+The user should start as the start.html page, work their shift using any page but start.html 
+and endofshift.html. When they click STOP, endofshift.html should render and the user should not
+be able to visit any page from before.
