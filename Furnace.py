@@ -172,7 +172,7 @@ class Furnace:
 
     def saveLogAsFile(self):
         if self.furnaceLogActive:
-            id = ("Furnace_" + str(self.furnaceNum) + "_log.txt")
+            id = ("Furnace_" + str(self.furnaceNum) + "_" + "Shift_" + str(self.furnaceShift) + "_log.txt")
             file = open(id, "a")
             tm = time.time()
             file.write("\nSaved at: " + str(time.ctime(tm)))
